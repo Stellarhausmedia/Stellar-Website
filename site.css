@@ -909,3 +909,25 @@ html.js:not(.rm) .cal.will .cal-grid i.pnt.m{background:var(--cat-promo)}
 .pt.go svg{animation:ptwink .44s var(--e) both}
 @keyframes ptwink{0%{transform:scale(.35);opacity:0}45%{transform:scale(1.05);opacity:1}62%{transform:scale(1.05) scaleY(.14)}82%{transform:scale(1)}100%{transform:scale(1);opacity:1}}
 body.pt-out main,body.pt-out header,body.pt-out footer{opacity:0;transition:opacity .38s ease}
+
+/* ===== PHONE PILL-FIT (owner, 2026-07-04) — keep at EOF: these overrides must beat every earlier
+   rule on source order (.langsw at ~352 was winning over an earlier media block). The controls were
+   poking past the glass pill's right end on phones: the grid's equal 1fr sides pinned the star
+   dead-centre and spilled the cluster out of the glass. Phones drop the grid — the star centres
+   absolutely, the controls nest into the pill's right end, and the burger's RIGHT side curves into
+   a semicircle echoing the pill's end cap (its LEFT side keeps the square 12px bubble). ===== */
+@media(max-width:560px){
+ .nav .row{display:flex;justify-content:flex-end;position:relative;padding-left:1rem;padding-right:.5rem}
+ .brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+ .nav .cta{gap:.45rem}
+ .langsw{height:40px;padding:0 .6rem;font-size:.66rem}
+ .burger{width:42px;height:42px;border-radius:12px 21px 21px 12px}
+}
+@media(max-width:424px){ /* the JA pages' "English" pill is wider than 日本語 — their centred star
+ runs out of room earlier, so JA anchors left below ~424px */
+ html[lang="ja"] .brand{position:static;top:auto;left:auto;transform:none;margin-right:auto}
+}
+@media(max-width:400px){ /* below ~400px a centred star and three controls cannot coexist —
+ the star anchors left instead of overlapping the language pill */
+ .brand{position:static;top:auto;left:auto;transform:none;margin-right:auto}
+}
