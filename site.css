@@ -30,6 +30,7 @@
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;background:var(--surf);color:var(--tx);font-family:var(--fb);font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip} /* clip (hidden = old-browser fallback): blocks the sideways wiggle WITHOUT creating a scroll container — and unlike clip on html it leaves position:sticky alive. NEVER move this to html. */
 ::selection{background:var(--mint);color:#080B14}
+html{-webkit-tap-highlight-color:transparent} /* kill the browser's blue tap-flash on press (chips/buttons/links); designed :focus-visible + :active states carry the feedback */
 h1,h2,h3,h4{margin:0;font-family:var(--fd);font-weight:800;line-height:1.0;letter-spacing:-.035em;color:var(--tx);text-wrap:balance}
 p{margin:0;text-wrap:pretty}
 a{color:inherit;text-decoration:none}
