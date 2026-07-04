@@ -811,23 +811,9 @@ html.morph body{background:transparent}
 html.morph main section{background:transparent!important}
 html.morph footer{background:transparent!important}
 
-/* flowing gradient object behind the star */
-.g-obj{position:absolute;left:-38%;top:-52%;width:176%;height:176%;z-index:0;pointer-events:none;filter:blur(32px);opacity:.9}
-.g-obj i{position:absolute;inset:0;border-radius:50%}
-.g-obj .b1{background:radial-gradient(circle at 42% 44%,#5FE3C6,transparent 52%)}
-.g-obj .b2{background:radial-gradient(circle at 62% 52%,#F4CC85,transparent 52%)}
-.g-obj .b3{background:radial-gradient(circle at 50% 66%,#FF8C7A,transparent 48%)}
-.g-obj .b4{background:radial-gradient(circle at 56% 40%,#5FE3C6,transparent 50%)}
-html:not(.rm) .g-obj{animation:gospin 40s linear infinite}
-html:not(.rm) .g-obj .b1{animation:gob1 11s ease-in-out infinite alternate}
-html:not(.rm) .g-obj .b2{animation:gob2 13s ease-in-out infinite alternate}
-html:not(.rm) .g-obj .b3{animation:gob3 15s ease-in-out infinite alternate}
-html:not(.rm) .g-obj .b4{animation:gob4 12s ease-in-out infinite alternate}
-@keyframes gospin{to{transform:rotate(360deg)}}
-@keyframes gob1{to{transform:translate(14%,10%) scale(1.12)}}
-@keyframes gob2{to{transform:translate(-12%,8%) scale(1.08)}}
-@keyframes gob3{to{transform:translate(8%,-12%) scale(1.14)}}
-@keyframes gob4{to{transform:translate(-10%,-8%) scale(1.1)}}
+/* (removed 2026-07-04: the .g-obj blur(32px) gradient blob + its gospin/gob1-4 animations were
+   dead CSS — never injected into any page's DOM. The hero glow that actually renders is .aura,
+   a cheap radial-gradient with no blur filter, faded out during the portal zoom.) */
 
 /* loading screen */
 html.loading{background:#080B14}

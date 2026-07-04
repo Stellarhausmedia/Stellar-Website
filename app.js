@@ -56,7 +56,11 @@
        preventDefaults touchend, which kills tap→click synthesis — verified empirically: with it on,
        NOTHING on the page is tappable on a touch device. Scroll-driven scenes track native touch
        scroll fine via ScrollTrigger; the phone hero gets its pacing from the longer runway instead. */
-    lenis = new Lenis({ duration: 1.15, smoothWheel: true, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
+    /* duration 1.15 -> 0.6 (owner, 2026-07-04): the floaty smoothing made scroll-linked scenes
+       (portal star, calendar, film strip) trail the wheel on desktop. 0.6 keeps a glide but tracks
+       roughly twice as close to 1:1. Desktop feel only — touch stays native (see note above).
+       One number: raise toward 1.1 for more float, drop toward 0.3 for near-instant. */
+    lenis = new Lenis({ duration: 0.6, smoothWheel: true, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
     if (G) {
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
