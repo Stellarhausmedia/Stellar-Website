@@ -726,7 +726,7 @@ html.rm .wsplit .w{opacity:1!important;transform:none!important}
 .foot{padding:clamp(3rem,7vw,5rem) 0 2.4rem;position:relative;overflow:hidden}
 .foot .wrap{position:relative;z-index:1}
 /* Dennis-style CTA row: a hairline with a big round magnetic CTA sitting on it */
-.foot-cta{position:relative;border-top:1px solid var(--line);margin:clamp(3rem,7vw,5rem) 0 clamp(2rem,5vw,3.2rem);display:flex;justify-content:flex-end}
+.foot-cta{position:relative;margin:clamp(3rem,7vw,5rem) 0 clamp(2rem,5vw,3.2rem);display:flex;justify-content:flex-end} /* rule behind the stamp removed on the owner's call (2026-07-04) */
 /* stamp-style: the phrase runs around the rim (SVG text on a circular path, slowly rotating), the arrow sits dead-centre */
 .fcta{flex:none;position:relative;width:clamp(150px,20vw,196px);aspect-ratio:1;border-radius:50%;background:var(--mint);color:#080B14;display:grid;place-items:center;margin-top:calc(clamp(150px,20vw,196px)/-2);transition:transform .35s var(--e),box-shadow .35s var(--e)}
 @media(max-width:700px){.foot-cta{justify-content:center}.fcta{margin-top:0}} /* narrow screens: the raised stamp lands on the headline ("…way.") — sit it fully below the rule, centred, instead */
@@ -800,7 +800,12 @@ html.lenis,html.lenis body{height:auto}
 @keyframes pagein{from{opacity:0}to{opacity:1}}
 
 /* scroll-driven colour morph */
-.bg-layer{position:fixed;inset:0;z-index:-1;background:#080B14;pointer-events:none}
+/* html self-paints the theme colour: on mobile the URL-bar resize can briefly open a gap between
+   the lifted colour sheet and the footer beneath — any uncovered pixel must be brand, never white
+   (it also shines through the curtain bars' transparent tops as a scroll "glitch") */
+html{background:var(--ink,#080B14)}
+html.light{background:var(--lt,#F0B7A6)}
+.bg-layer{position:fixed;inset:0;z-index:-1;background:#080B14;pointer-events:none;will-change:transform}
 html.morph body{background:transparent}
 html.morph main section{background:transparent!important}
 html.morph footer{background:transparent!important}
