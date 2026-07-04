@@ -581,7 +581,8 @@
          that slide as "scrolls a little down and then expands". Pinning at the nav's bottom edge
          means scroll #1 is pure zoom, nothing translates. */
       var navEl = document.querySelector(".nav");
-      function pinTop() { wrap2.style.top = (navEl ? navEl.offsetHeight : 0) + "px"; }
+      var baseCc = 0; /* cached viewport-space centre of the pinned stage — was a per-frame getBoundingClientRect in ptick (a forced reflow every zoom frame) */
+      function pinTop() { var nh = navEl ? navEl.offsetHeight : 0; wrap2.style.top = nh + "px"; baseCc = nh + st2.offsetTop + st2.offsetHeight / 2; }
       pinTop(); addEventListener("resize", pinTop);
       var disc = document.createElement("div"); disc.className = "p-disc"; disc.setAttribute("aria-hidden", "true");
       hero2.appendChild(disc); /* fixed-position: lives outside the scaled stage so it renders crisp at native size */
@@ -667,8 +668,7 @@
           var t2 = Math.max(0, pp / 0.85); /* swell starts at the very first scrolled pixel — no dead zone */
           portalS = 1 + Math.pow(t2, 2.2) * 36; /* the magnetic loop applies this to the stage */
           /* the star travels DOWN as it swells, so the hole zooms into the viewport centre */
-          var wr2 = wrap2.getBoundingClientRect();
-          var baseC = wr2.top + st2.offsetTop + st2.offsetHeight / 2;
+          var baseC = baseCc; /* cached in pinTop — the pinned wrap sits at the nav's bottom edge the whole zoom, so this never changes mid-scroll (no per-frame reflow) */
           var f2 = Math.max(0, Math.min(1, pp / 0.5)); f2 = f2 * f2 * (3 - 2 * f2);
           portalY = (innerHeight / 2 - baseC) * f2;
           /* the fixed surf-3 disc glues to the hole centre each frame, scaled near-native for a crisp
@@ -1321,35 +1321,47 @@
         for (var ci = 0; ci < 56; ci++) cur.appendChild(document.createElement("i"));
         revCap.appendChild(cur);
       }
-      /* paint() reads LIVE geometry every time (no cached tops — layouts change late and cached
-         boundaries froze wrong colours over text) and is driven by BOTH raw scroll events and a
-         rAF loop: if either mechanism is starved, the other keeps the colours truthful. */
+      /* PERF (2026-07-05): geometry is measured ONCE per layout — never per frame. The old paint()
+         read getBoundingClientRect on EVERY section + the footer EVERY frame (a forced synchronous
+         layout / reflow per read) AND ran from both a scroll listener and a rAF loop => ~18 reflows
+         per scroll frame, ungated on mobile: THE dominant scroll cost the research found. Now paint()
+         is pure arithmetic + one style write, driven by one rAF with a scrollY early-out. The old
+         "cached boundaries froze wrong colours" worry is handled by re-measuring on every layout-
+         moving event (resize / load / ScrollTrigger.refresh) instead of measuring every frame. */
+      var tops = [], footTop = 0, footH = 0, mLastY = -1, mForce = true;
+      function measure() {
+        var sy = window.scrollY;
+        tops = panels.map(function (p) { return p.el.getBoundingClientRect().top + sy; });
+        if (footEl) { var fr = footEl.getBoundingClientRect(); footTop = fr.top + sy; footH = fr.height; }
+        mForce = true;
+      }
+      measure();
       function paint() {
         try {
-          var ih2 = innerHeight, T = Math.min(280, ih2 * 0.42), y = window.scrollY + ih2 * 0.42;
-          var tops2 = panels.map(function (p) { return p.el.getBoundingClientRect().top + window.scrollY; });
+          var sy = window.scrollY;
+          if (sy === mLastY && !mForce) return; /* idle/unchanged frames: one comparison, zero work */
+          mLastY = sy; mForce = false;
+          var ih2 = innerHeight, T = Math.min(280, ih2 * 0.42), y = sy + ih2 * 0.42;
           /* behind the portal the background must finish its ink→surf-3 blend by the exact scroll
-             where the disc hides — but no earlier than needed. Both are navy family, so this is subtle
-             anyway; the offset just keeps the swap hidden under the circle. */
+             where the disc hides — no earlier. Both navy family, so subtle; offset hides the swap. */
           var pOff = discHideBottom > 0 ? Math.max(ih2 * 0.35, discHideBottom - ih2 * 0.42 + T / 2 + 28) : ih2 * 0.8;
           var col = colOf(panels[0]), i, off;
           for (i = 0; i < panels.length; i++) {
             off = (i + 1 < panels.length && panels[i].el.classList.contains("portal")) ? pOff : 0;
-            var nt = (i + 1 < panels.length) ? (tops2[i + 1] - off) : Infinity;
+            var nt = (i + 1 < panels.length) ? (tops[i + 1] - off) : Infinity;
             if (y < nt) { col = colOf(panels[i]); break; }
           }
           for (i = 0; i < panels.length - 1; i++) {
             off = panels[i].el.classList.contains("portal") ? pOff : 0;
-            var bd = tops2[i + 1] - off;
+            var bd = tops[i + 1] - off;
             if (y > bd - T / 2 && y < bd + T / 2) { var t = (y - (bd - T / 2)) / T; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t); col = lerp(colOf(panels[i]), colOf(panels[i + 1]), t); break; }
           }
           var s = "rgb(" + Math.round(col[0]) + "," + Math.round(col[1]) + "," + Math.round(col[2]) + ")";
           if (s !== last) { bgl.style.background = s; last = s; }
-          /* the reveal: as the footer's region enters the viewport, lift the colour layer by that
-             exact amount, uncovering the stationary footer beneath — content sliding up off it */
+          /* the reveal: as the footer's region enters view, lift the colour layer by that amount to
+             uncover the stationary footer beneath — content sliding up off it (cached footer geometry) */
           if (footEl) {
-            var fr2 = footEl.getBoundingClientRect();
-            var reveal = Math.max(0, Math.min(fr2.height, ih2 - fr2.top));
+            var reveal = Math.max(0, Math.min(footH, ih2 - (footTop - sy)));
             if (reveal !== lastReveal) {
               bgl.style.transform = reveal > 0 ? "translateY(" + (-reveal).toFixed(1) + "px)" : "";
               if ((reveal > 0.5) !== (lastReveal > 0.5)) bgl.classList.toggle("lift", reveal > 0.5);
@@ -1362,8 +1374,9 @@
         }
       }
       paint();
-      addEventListener("scroll", paint, { passive: true });
-      addEventListener("resize", paint);
+      addEventListener("resize", measure, { passive: true });
+      addEventListener("load", measure);
+      if (G && ScrollTrigger.addEventListener) ScrollTrigger.addEventListener("refresh", measure); /* re-cache after any layout the site re-measures */
       (function frame() { paint(); requestAnimationFrame(frame); })();
     }
   }

@@ -931,3 +931,13 @@ body.pt-out main,body.pt-out header,body.pt-out footer{opacity:0;transition:opac
 .hero.portal.portal-css .p-disc{animation-name:shmPortalDisc;animation-duration:auto;animation-timing-function:linear;animation-fill-mode:both;animation-timeline:--shmportal;will-change:transform}
 .hero.portal.portal-css .star{animation-name:shmPortalStar;animation-duration:auto;animation-timing-function:linear;animation-fill-mode:both;animation-timeline:--shmportal}
 @keyframes shmPortalStar{0%,90%{opacity:1}98%,100%{opacity:0}} /* the arms' end-fade, same timeline = exact sync with the swell */
+
+/* ===== SCROLL PERF ON TOUCH (2026-07-05, research-driven): backdrop-filter:blur(18px) on the
+   fixed nav pill re-samples the WHOLE moving viewport every scrolled frame — a documented ~30%
+   framerate tax, worst on Android — and it sits over the scaling hero for the entire zoom. On
+   coarse pointers, drop the blur for a solid translucent pill (cheaper, and reads cleaner at
+   phone size). Desktop keeps the glass. ===== */
+@media (pointer:coarse){
+  .nav .row{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(12,17,32,.9)}
+  html.light .nav .row{background:rgba(250,238,232,.93)}
+}
