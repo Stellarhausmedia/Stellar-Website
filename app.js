@@ -56,11 +56,7 @@
        preventDefaults touchend, which kills tap→click synthesis — verified empirically: with it on,
        NOTHING on the page is tappable on a touch device. Scroll-driven scenes track native touch
        scroll fine via ScrollTrigger; the phone hero gets its pacing from the longer runway instead. */
-    /* duration 1.15 -> 0.6 (owner, 2026-07-04): the floaty smoothing made scroll-linked scenes
-       (portal star, calendar, film strip) trail the wheel on desktop. 0.6 keeps a glide but tracks
-       roughly twice as close to 1:1. Desktop feel only — touch stays native (see note above).
-       One number: raise toward 1.1 for more float, drop toward 0.3 for near-instant. */
-    lenis = new Lenis({ duration: 0.6, smoothWheel: true, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
+    lenis = new Lenis({ duration: 1.15, smoothWheel: true, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
     if (G) {
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
@@ -343,7 +339,6 @@
   /* home hero star: assembles, then the PORTAL module (below) takes over on scroll.
      The split-into-pieces moment now lives on the front-desk page. */
   var portalS = 1, portalY = 0; /* the hero star's portal scale + downward travel — written by the portal module, applied by the magnetic loop */
-  var portalCSS = false; /* phones with scroll-driven-animation support: the COMPOSITOR owns the portal transforms (stage/disc/star) — JS must never write them. Set by the portal module. */
   var discHideBottom = 0; /* the hero-bottom offset at which the portal disc hides — the colour morph inks the background just before this, so the darkness always arrives via the growing circle, never early behind it */
   var bendAdd = null; /* set by the bendy-card module; later modules (film strip) can enrol elements */
   var stage = document.getElementById("stage");
@@ -546,7 +541,7 @@
         var dist = Math.sqrt(dx * dx + dy * dy), R = r.width * 0.7;
         if (dist < R) { var f = 1 - dist / R; tX = dx * 0.16 * f; tY = dy * 0.16 * f; } else { tX = 0; tY = 0; }
       }, { passive: true });
-      (function loop() { if (portalS > 1.05) { tX = 0; tY = 0; } cX += (tX - cX) * 0.08; cY += (tY - cY) * 0.08; if (!portalCSS) hs.style.transform = "translate(" + cX.toFixed(2) + "px," + (cY + portalY).toFixed(2) + "px) scale(" + portalS.toFixed(3) + ")"; requestAnimationFrame(loop); })(); /* compositor-portal phones: the CSS animation owns the stage transform — writing here would fight it */
+      (function loop() { if (portalS > 1.05) { tX = 0; tY = 0; } cX += (tX - cX) * 0.08; cY += (tY - cY) * 0.08; hs.style.transform = "translate(" + cX.toFixed(2) + "px," + (cY + portalY).toFixed(2) + "px) scale(" + portalS.toFixed(3) + ")"; requestAnimationFrame(loop); })();
     }
   }
 
@@ -569,20 +564,13 @@
       hero2.classList.add("portal");
       /* phones get a longer runway: a thumb-flick covers far more scroll than a wheel notch, so
          260vh compresses the whole zoom into one gesture — 340vh keeps it a played moment */
-      var coarse2 = matchMedia("(pointer:coarse)").matches;
-      hero2.style.height = coarse2 ? "340vh" : "260vh";
-      /* JS-scrub smoothing — 0.09 everywhere again (the 2026-07-04 mobile 0.5 experiment felt
-         steppy AND still trailed; REVERTED). On phones that support scroll-driven animations the
-         transforms leave JS entirely (compositor portal below) and this lerp only paces the soft
-         copy/aura fades, where smooth is right. On the fallback path it's the original feel. */
-      var ppLerp = 0.09;
+      hero2.style.height = matchMedia("(pointer:coarse)").matches ? "340vh" : "260vh";
       /* pin the scene from the very first scrolled pixel: the nav is in flow, so a sticky top of
          0 only engages after the wrap has already slid up by the nav's height — the owner read
          that slide as "scrolls a little down and then expands". Pinning at the nav's bottom edge
          means scroll #1 is pure zoom, nothing translates. */
       var navEl = document.querySelector(".nav");
-      var baseCc = 0; /* cached viewport-space centre of the pinned stage — was a per-frame getBoundingClientRect in ptick (a forced reflow every zoom frame) */
-      function pinTop() { var nh = navEl ? navEl.offsetHeight : 0; wrap2.style.top = nh + "px"; baseCc = nh + st2.offsetTop + st2.offsetHeight / 2; }
+      function pinTop() { wrap2.style.top = (navEl ? navEl.offsetHeight : 0) + "px"; }
       pinTop(); addEventListener("resize", pinTop);
       var disc = document.createElement("div"); disc.className = "p-disc"; disc.setAttribute("aria-hidden", "true");
       hero2.appendChild(disc); /* fixed-position: lives outside the scaled stage so it renders crisp at native size */
@@ -599,48 +587,6 @@
       function measurePad() { if (nextSec) { var v = parseFloat(getComputedStyle(nextSec).paddingTop); if (v > 0) nextPad = v; } }
       measurePad();
       addEventListener("resize", function () { measurePad(); force = true; });
-      /* THE COMPOSITOR PORTAL (owner, 2026-07-05 — the definitive mobile fix): a JS scrub can never
-         be 1:1 on touch — scroll positions are read on the main thread a frame+ AFTER the compositor
-         has already moved the page, and the 36x swell amplifies that gap into visible trail. So on
-         phones the stage/disc/star transforms are CSS scroll-driven animations on the hero's
-         view-timeline: they run ON the compositor, locked to native scroll by construction, immune
-         to main-thread jank. JS computes the keyframe NUMBERS once per layout (same formulas as the
-         scrub, so star + disc stay glued — both ride the SAME timeline) and never touches these
-         transforms per-frame. ptick keeps driving only the soft stuff (copy fade, aura, classes,
-         disc hide). No support (older iOS) => class never added, original JS scrub runs. */
-      if (coarse2 && window.CSS && CSS.supports && CSS.supports("animation-timeline", "view()")) {
-        var kfStyle = document.createElement("style");
-        document.head.appendChild(kfStyle);
-        var buildKF = function () {
-          var navH2 = navEl ? navEl.offsetHeight : 0;
-          /* layout-space geometry only (offset*) — rects are useless once the animation is live */
-          var baseC2 = navH2 + st2.offsetTop + st2.offsetHeight / 2; /* stage centre Y while the wrap is pinned at the nav's bottom edge */
-          var ax = 0, oe = st2; while (oe) { ax += oe.offsetLeft; oe = oe.offsetParent; }
-          var cx2 = ax + st2.offsetWidth / 2;
-          var w0 = st2.offsetWidth, dw = disc.offsetWidth || 1;
-          disc.style.left = cx2.toFixed(1) + "px";
-          disc.style.top = baseC2.toFixed(1) + "px";
-          var stg = "", dsc = "";
-          for (var k = 0; k <= 40; k++) {
-            var p2 = k / 40, pc = (p2 * 100).toFixed(1) + "%";
-            var S2 = 1 + Math.pow(p2 / 0.85, 2.2) * 36;               /* same swell curve as the JS scrub */
-            var f3 = Math.min(1, p2 / 0.5); f3 = f3 * f3 * (3 - 2 * f3);
-            var Y2 = (innerHeight / 2 - baseC2) * f3;                 /* the hole glides to the viewport centre */
-            var D2 = (w0 * S2 * 0.145 * 1.04) / dw;                   /* disc rides the same maths = glued to the hole */
-            stg += pc + "{transform:translateY(" + Y2.toFixed(1) + "px) scale(" + S2.toFixed(3) + ")}";
-            dsc += pc + "{transform:translate(-50%,-50%) translateY(" + Y2.toFixed(1) + "px) scale(" + D2.toFixed(4) + ")}";
-          }
-          /* range starts navH BEFORE the hero covers the scrollport = the very first scrolled pixel
-             already swells the star, exactly like the ScrollTrigger scrub (start 0) */
-          kfStyle.textContent = "@keyframes shmPortalStage{" + stg + "}@keyframes shmPortalDisc{" + dsc + "}" +
-            ".hero.portal.portal-css .stage,.hero.portal.portal-css .p-disc,.hero.portal.portal-css .star{animation-range:contain " + (-navH2) + "px contain 100%}";
-        };
-        buildKF();
-        hero2.classList.add("portal-css");
-        portalCSS = true;
-        var kfT2 = 0;
-        addEventListener("resize", function () { clearTimeout(kfT2); kfT2 = setTimeout(buildKF, 150); }); /* URL-bar collapse re-aims the keyframes */
-      }
       (function ptick() {
         /* the disc is position:fixed — once the hero scrolls past, it must vanish or it sits over
            every section below for the rest of the page (text paints underneath it). Checked every
@@ -658,7 +604,7 @@
         var diff = pT - pp;
         if (Math.abs(diff) > 0.0004 || force) {
           force = false;
-          pp += diff * ppLerp;
+          pp += diff * 0.09;
           if (Math.abs(pT - pp) < 0.0004) pp = pT;
           /* the hero copy carries .reveal transitions — kill them once the portal starts so the
              per-frame fade tracks the scroll instantly instead of smearing through a .8s ease */
@@ -668,17 +614,15 @@
           var t2 = Math.max(0, pp / 0.85); /* swell starts at the very first scrolled pixel — no dead zone */
           portalS = 1 + Math.pow(t2, 2.2) * 36; /* the magnetic loop applies this to the stage */
           /* the star travels DOWN as it swells, so the hole zooms into the viewport centre */
-          var baseC = baseCc; /* cached in pinTop — the pinned wrap sits at the nav's bottom edge the whole zoom, so this never changes mid-scroll (no per-frame reflow) */
+          var wr2 = wrap2.getBoundingClientRect();
+          var baseC = wr2.top + st2.offsetTop + st2.offsetHeight / 2;
           var f2 = Math.max(0, Math.min(1, pp / 0.5)); f2 = f2 * f2 * (3 - 2 * f2);
           portalY = (innerHeight / 2 - baseC) * f2;
-          /* the fixed surf-3 disc glues to the hole centre each frame, scaled near-native for a crisp
-             edge (JS-scrub path only — on compositor-portal phones the CSS animation owns the disc) */
-          if (!portalCSS) {
-            var sr2 = st2.getBoundingClientRect();
-            disc.style.left = (sr2.left + sr2.width / 2).toFixed(1) + "px";
-            disc.style.top = (sr2.top + sr2.height / 2).toFixed(1) + "px";
-            disc.style.setProperty("--ds", ((sr2.width * 0.145 * 1.04) / (disc.offsetWidth || 1)).toFixed(4));
-          }
+          /* the fixed surf-3 disc glues to the hole centre each frame, scaled near-native for a crisp edge */
+          var sr2 = st2.getBoundingClientRect();
+          disc.style.left = (sr2.left + sr2.width / 2).toFixed(1) + "px";
+          disc.style.top = (sr2.top + sr2.height / 2).toFixed(1) + "px";
+          disc.style.setProperty("--ds", ((sr2.width * 0.145 * 1.04) / (disc.offsetWidth || 1)).toFixed(4));
           /* the owner's design: the circle stays the glow's lighter-navy core the WHOLE way and
              never changes colour — the section it opens into (.s-surf3) is that exact same tone,
              so the hand-off is same-on-same, invisible. No per-frame colour blend, nothing to
@@ -688,7 +632,7 @@
           if (aura2) aura2.style.opacity = Math.max(0, 1 - pp * 4).toFixed(3);
           /* near the end the star's mint/gold arms fade out — the pink-3 disc stays, so what's
              left is a clean navy field handing off into the surf-3 section, seamless */
-          if (!portalCSS) starEl.style.opacity = pp > 0.9 ? Math.max(0, 1 - (pp - 0.9) / 0.08).toFixed(3) : "1"; /* compositor phones: shmPortalStar keyframes own this fade, on the same timeline */
+          starEl.style.opacity = pp > 0.9 ? Math.max(0, 1 - (pp - 0.9) / 0.08).toFixed(3) : "1";
         }
         requestAnimationFrame(ptick);
       })();
@@ -1321,47 +1265,35 @@
         for (var ci = 0; ci < 56; ci++) cur.appendChild(document.createElement("i"));
         revCap.appendChild(cur);
       }
-      /* PERF (2026-07-05): geometry is measured ONCE per layout — never per frame. The old paint()
-         read getBoundingClientRect on EVERY section + the footer EVERY frame (a forced synchronous
-         layout / reflow per read) AND ran from both a scroll listener and a rAF loop => ~18 reflows
-         per scroll frame, ungated on mobile: THE dominant scroll cost the research found. Now paint()
-         is pure arithmetic + one style write, driven by one rAF with a scrollY early-out. The old
-         "cached boundaries froze wrong colours" worry is handled by re-measuring on every layout-
-         moving event (resize / load / ScrollTrigger.refresh) instead of measuring every frame. */
-      var tops = [], footTop = 0, footH = 0, mLastY = -1, mForce = true;
-      function measure() {
-        var sy = window.scrollY;
-        tops = panels.map(function (p) { return p.el.getBoundingClientRect().top + sy; });
-        if (footEl) { var fr = footEl.getBoundingClientRect(); footTop = fr.top + sy; footH = fr.height; }
-        mForce = true;
-      }
-      measure();
+      /* paint() reads LIVE geometry every time (no cached tops — layouts change late and cached
+         boundaries froze wrong colours over text) and is driven by BOTH raw scroll events and a
+         rAF loop: if either mechanism is starved, the other keeps the colours truthful. */
       function paint() {
         try {
-          var sy = window.scrollY;
-          if (sy === mLastY && !mForce) return; /* idle/unchanged frames: one comparison, zero work */
-          mLastY = sy; mForce = false;
-          var ih2 = innerHeight, T = Math.min(280, ih2 * 0.42), y = sy + ih2 * 0.42;
+          var ih2 = innerHeight, T = Math.min(280, ih2 * 0.42), y = window.scrollY + ih2 * 0.42;
+          var tops2 = panels.map(function (p) { return p.el.getBoundingClientRect().top + window.scrollY; });
           /* behind the portal the background must finish its ink→surf-3 blend by the exact scroll
-             where the disc hides — no earlier. Both navy family, so subtle; offset hides the swap. */
+             where the disc hides — but no earlier than needed. Both are navy family, so this is subtle
+             anyway; the offset just keeps the swap hidden under the circle. */
           var pOff = discHideBottom > 0 ? Math.max(ih2 * 0.35, discHideBottom - ih2 * 0.42 + T / 2 + 28) : ih2 * 0.8;
           var col = colOf(panels[0]), i, off;
           for (i = 0; i < panels.length; i++) {
             off = (i + 1 < panels.length && panels[i].el.classList.contains("portal")) ? pOff : 0;
-            var nt = (i + 1 < panels.length) ? (tops[i + 1] - off) : Infinity;
+            var nt = (i + 1 < panels.length) ? (tops2[i + 1] - off) : Infinity;
             if (y < nt) { col = colOf(panels[i]); break; }
           }
           for (i = 0; i < panels.length - 1; i++) {
             off = panels[i].el.classList.contains("portal") ? pOff : 0;
-            var bd = tops[i + 1] - off;
+            var bd = tops2[i + 1] - off;
             if (y > bd - T / 2 && y < bd + T / 2) { var t = (y - (bd - T / 2)) / T; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t); col = lerp(colOf(panels[i]), colOf(panels[i + 1]), t); break; }
           }
           var s = "rgb(" + Math.round(col[0]) + "," + Math.round(col[1]) + "," + Math.round(col[2]) + ")";
           if (s !== last) { bgl.style.background = s; last = s; }
-          /* the reveal: as the footer's region enters view, lift the colour layer by that amount to
-             uncover the stationary footer beneath — content sliding up off it (cached footer geometry) */
+          /* the reveal: as the footer's region enters the viewport, lift the colour layer by that
+             exact amount, uncovering the stationary footer beneath — content sliding up off it */
           if (footEl) {
-            var reveal = Math.max(0, Math.min(footH, ih2 - (footTop - sy)));
+            var fr2 = footEl.getBoundingClientRect();
+            var reveal = Math.max(0, Math.min(fr2.height, ih2 - fr2.top));
             if (reveal !== lastReveal) {
               bgl.style.transform = reveal > 0 ? "translateY(" + (-reveal).toFixed(1) + "px)" : "";
               if ((reveal > 0.5) !== (lastReveal > 0.5)) bgl.classList.toggle("lift", reveal > 0.5);
@@ -1374,9 +1306,8 @@
         }
       }
       paint();
-      addEventListener("resize", measure, { passive: true });
-      addEventListener("load", measure);
-      if (G && ScrollTrigger.addEventListener) ScrollTrigger.addEventListener("refresh", measure); /* re-cache after any layout the site re-measures */
+      addEventListener("scroll", paint, { passive: true });
+      addEventListener("resize", paint);
       (function frame() { paint(); requestAnimationFrame(frame); })();
     }
   }
