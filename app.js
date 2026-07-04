@@ -568,7 +568,15 @@
       hero2.classList.add("portal");
       /* phones get a longer runway: a thumb-flick covers far more scroll than a wheel notch, so
          260vh compresses the whole zoom into one gesture — 340vh keeps it a played moment */
-      hero2.style.height = matchMedia("(pointer:coarse)").matches ? "340vh" : "260vh";
+      var coarse2 = matchMedia("(pointer:coarse)").matches;
+      hero2.style.height = coarse2 ? "340vh" : "260vh";
+      /* portal-progress smoothing (owner mobile-lag fix, 2026-07-04): desktop keeps a light lerp
+         (Lenis already smooths the wheel); phones track the scrub near 1:1. Touch is native — no
+         Lenis — so the old 0.09 lerp on every device was pure trail on mobile: the star visibly
+         chasing the thumb. 0.5 removes ~4/5 of that trail while still de-stepping coalesced
+         touch-scroll events. Everything (star, disc, morph) is computed from this same pp in one
+         pass, so they stay glued. One number: lower = smoother+laggier, higher = tighter. */
+      var ppLerp = coarse2 ? 0.5 : 0.09;
       /* pin the scene from the very first scrolled pixel: the nav is in flow, so a sticky top of
          0 only engages after the wrap has already slid up by the nav's height — the owner read
          that slide as "scrolls a little down and then expands". Pinning at the nav's bottom edge
@@ -608,7 +616,7 @@
         var diff = pT - pp;
         if (Math.abs(diff) > 0.0004 || force) {
           force = false;
-          pp += diff * 0.09;
+          pp += diff * ppLerp;
           if (Math.abs(pT - pp) < 0.0004) pp = pT;
           /* the hero copy carries .reveal transitions — kill them once the portal starts so the
              per-frame fade tracks the scroll instantly instead of smearing through a .8s ease */
