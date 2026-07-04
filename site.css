@@ -918,3 +918,16 @@ body.pt-out main,body.pt-out header,body.pt-out footer{opacity:0;transition:opac
  the star anchors left instead of overlapping the language pill */
  .brand{position:static;top:auto;left:auto;transform:none;margin-right:auto}
 }
+
+/* ===== COMPOSITOR PORTAL (phones, 2026-07-05): the star swell + disc + arm-fade are CSS
+   scroll-driven animations on the hero's view-timeline — they run on the COMPOSITOR thread,
+   locked 1:1 to native touch scroll, immune to main-thread jank (a JS scrub reads scroll a
+   frame+ late on mobile, and the 36x swell amplifies that into visible trail). app.js builds
+   the shmPortalStage/shmPortalDisc keyframes + the -navH animation-range from layout numbers
+   and injects them; it never touches these transforms per-frame. .portal-css is only added on
+   coarse pointers whose browser supports animation-timeline; everyone else keeps the JS scrub. */
+.hero.portal.portal-css{view-timeline:--shmportal block}
+.hero.portal.portal-css .stage{animation-name:shmPortalStage;animation-duration:auto;animation-timing-function:linear;animation-fill-mode:both;animation-timeline:--shmportal}
+.hero.portal.portal-css .p-disc{animation-name:shmPortalDisc;animation-duration:auto;animation-timing-function:linear;animation-fill-mode:both;animation-timeline:--shmportal;will-change:transform}
+.hero.portal.portal-css .star{animation-name:shmPortalStar;animation-duration:auto;animation-timing-function:linear;animation-fill-mode:both;animation-timeline:--shmportal}
+@keyframes shmPortalStar{0%,90%{opacity:1}98%,100%{opacity:0}} /* the arms' end-fade, same timeline = exact sync with the swell */

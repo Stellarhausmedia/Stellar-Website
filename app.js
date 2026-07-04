@@ -343,6 +343,7 @@
   /* home hero star: assembles, then the PORTAL module (below) takes over on scroll.
      The split-into-pieces moment now lives on the front-desk page. */
   var portalS = 1, portalY = 0; /* the hero star's portal scale + downward travel — written by the portal module, applied by the magnetic loop */
+  var portalCSS = false; /* phones with scroll-driven-animation support: the COMPOSITOR owns the portal transforms (stage/disc/star) — JS must never write them. Set by the portal module. */
   var discHideBottom = 0; /* the hero-bottom offset at which the portal disc hides — the colour morph inks the background just before this, so the darkness always arrives via the growing circle, never early behind it */
   var bendAdd = null; /* set by the bendy-card module; later modules (film strip) can enrol elements */
   var stage = document.getElementById("stage");
@@ -545,7 +546,7 @@
         var dist = Math.sqrt(dx * dx + dy * dy), R = r.width * 0.7;
         if (dist < R) { var f = 1 - dist / R; tX = dx * 0.16 * f; tY = dy * 0.16 * f; } else { tX = 0; tY = 0; }
       }, { passive: true });
-      (function loop() { if (portalS > 1.05) { tX = 0; tY = 0; } cX += (tX - cX) * 0.08; cY += (tY - cY) * 0.08; hs.style.transform = "translate(" + cX.toFixed(2) + "px," + (cY + portalY).toFixed(2) + "px) scale(" + portalS.toFixed(3) + ")"; requestAnimationFrame(loop); })();
+      (function loop() { if (portalS > 1.05) { tX = 0; tY = 0; } cX += (tX - cX) * 0.08; cY += (tY - cY) * 0.08; if (!portalCSS) hs.style.transform = "translate(" + cX.toFixed(2) + "px," + (cY + portalY).toFixed(2) + "px) scale(" + portalS.toFixed(3) + ")"; requestAnimationFrame(loop); })(); /* compositor-portal phones: the CSS animation owns the stage transform — writing here would fight it */
     }
   }
 
@@ -570,13 +571,11 @@
          260vh compresses the whole zoom into one gesture — 340vh keeps it a played moment */
       var coarse2 = matchMedia("(pointer:coarse)").matches;
       hero2.style.height = coarse2 ? "340vh" : "260vh";
-      /* portal-progress smoothing (owner mobile-lag fix, 2026-07-04): desktop keeps a light lerp
-         (Lenis already smooths the wheel); phones track the scrub near 1:1. Touch is native — no
-         Lenis — so the old 0.09 lerp on every device was pure trail on mobile: the star visibly
-         chasing the thumb. 0.5 removes ~4/5 of that trail while still de-stepping coalesced
-         touch-scroll events. Everything (star, disc, morph) is computed from this same pp in one
-         pass, so they stay glued. One number: lower = smoother+laggier, higher = tighter. */
-      var ppLerp = coarse2 ? 0.5 : 0.09;
+      /* JS-scrub smoothing — 0.09 everywhere again (the 2026-07-04 mobile 0.5 experiment felt
+         steppy AND still trailed; REVERTED). On phones that support scroll-driven animations the
+         transforms leave JS entirely (compositor portal below) and this lerp only paces the soft
+         copy/aura fades, where smooth is right. On the fallback path it's the original feel. */
+      var ppLerp = 0.09;
       /* pin the scene from the very first scrolled pixel: the nav is in flow, so a sticky top of
          0 only engages after the wrap has already slid up by the nav's height — the owner read
          that slide as "scrolls a little down and then expands". Pinning at the nav's bottom edge
@@ -599,6 +598,48 @@
       function measurePad() { if (nextSec) { var v = parseFloat(getComputedStyle(nextSec).paddingTop); if (v > 0) nextPad = v; } }
       measurePad();
       addEventListener("resize", function () { measurePad(); force = true; });
+      /* THE COMPOSITOR PORTAL (owner, 2026-07-05 — the definitive mobile fix): a JS scrub can never
+         be 1:1 on touch — scroll positions are read on the main thread a frame+ AFTER the compositor
+         has already moved the page, and the 36x swell amplifies that gap into visible trail. So on
+         phones the stage/disc/star transforms are CSS scroll-driven animations on the hero's
+         view-timeline: they run ON the compositor, locked to native scroll by construction, immune
+         to main-thread jank. JS computes the keyframe NUMBERS once per layout (same formulas as the
+         scrub, so star + disc stay glued — both ride the SAME timeline) and never touches these
+         transforms per-frame. ptick keeps driving only the soft stuff (copy fade, aura, classes,
+         disc hide). No support (older iOS) => class never added, original JS scrub runs. */
+      if (coarse2 && window.CSS && CSS.supports && CSS.supports("animation-timeline", "view()")) {
+        var kfStyle = document.createElement("style");
+        document.head.appendChild(kfStyle);
+        var buildKF = function () {
+          var navH2 = navEl ? navEl.offsetHeight : 0;
+          /* layout-space geometry only (offset*) — rects are useless once the animation is live */
+          var baseC2 = navH2 + st2.offsetTop + st2.offsetHeight / 2; /* stage centre Y while the wrap is pinned at the nav's bottom edge */
+          var ax = 0, oe = st2; while (oe) { ax += oe.offsetLeft; oe = oe.offsetParent; }
+          var cx2 = ax + st2.offsetWidth / 2;
+          var w0 = st2.offsetWidth, dw = disc.offsetWidth || 1;
+          disc.style.left = cx2.toFixed(1) + "px";
+          disc.style.top = baseC2.toFixed(1) + "px";
+          var stg = "", dsc = "";
+          for (var k = 0; k <= 40; k++) {
+            var p2 = k / 40, pc = (p2 * 100).toFixed(1) + "%";
+            var S2 = 1 + Math.pow(p2 / 0.85, 2.2) * 36;               /* same swell curve as the JS scrub */
+            var f3 = Math.min(1, p2 / 0.5); f3 = f3 * f3 * (3 - 2 * f3);
+            var Y2 = (innerHeight / 2 - baseC2) * f3;                 /* the hole glides to the viewport centre */
+            var D2 = (w0 * S2 * 0.145 * 1.04) / dw;                   /* disc rides the same maths = glued to the hole */
+            stg += pc + "{transform:translateY(" + Y2.toFixed(1) + "px) scale(" + S2.toFixed(3) + ")}";
+            dsc += pc + "{transform:translate(-50%,-50%) translateY(" + Y2.toFixed(1) + "px) scale(" + D2.toFixed(4) + ")}";
+          }
+          /* range starts navH BEFORE the hero covers the scrollport = the very first scrolled pixel
+             already swells the star, exactly like the ScrollTrigger scrub (start 0) */
+          kfStyle.textContent = "@keyframes shmPortalStage{" + stg + "}@keyframes shmPortalDisc{" + dsc + "}" +
+            ".hero.portal.portal-css .stage,.hero.portal.portal-css .p-disc,.hero.portal.portal-css .star{animation-range:contain " + (-navH2) + "px contain 100%}";
+        };
+        buildKF();
+        hero2.classList.add("portal-css");
+        portalCSS = true;
+        var kfT2 = 0;
+        addEventListener("resize", function () { clearTimeout(kfT2); kfT2 = setTimeout(buildKF, 150); }); /* URL-bar collapse re-aims the keyframes */
+      }
       (function ptick() {
         /* the disc is position:fixed — once the hero scrolls past, it must vanish or it sits over
            every section below for the rest of the page (text paints underneath it). Checked every
@@ -630,11 +671,14 @@
           var baseC = wr2.top + st2.offsetTop + st2.offsetHeight / 2;
           var f2 = Math.max(0, Math.min(1, pp / 0.5)); f2 = f2 * f2 * (3 - 2 * f2);
           portalY = (innerHeight / 2 - baseC) * f2;
-          /* the fixed surf-3 disc glues to the hole centre each frame, scaled near-native for a crisp edge */
-          var sr2 = st2.getBoundingClientRect();
-          disc.style.left = (sr2.left + sr2.width / 2).toFixed(1) + "px";
-          disc.style.top = (sr2.top + sr2.height / 2).toFixed(1) + "px";
-          disc.style.setProperty("--ds", ((sr2.width * 0.145 * 1.04) / (disc.offsetWidth || 1)).toFixed(4));
+          /* the fixed surf-3 disc glues to the hole centre each frame, scaled near-native for a crisp
+             edge (JS-scrub path only — on compositor-portal phones the CSS animation owns the disc) */
+          if (!portalCSS) {
+            var sr2 = st2.getBoundingClientRect();
+            disc.style.left = (sr2.left + sr2.width / 2).toFixed(1) + "px";
+            disc.style.top = (sr2.top + sr2.height / 2).toFixed(1) + "px";
+            disc.style.setProperty("--ds", ((sr2.width * 0.145 * 1.04) / (disc.offsetWidth || 1)).toFixed(4));
+          }
           /* the owner's design: the circle stays the glow's lighter-navy core the WHOLE way and
              never changes colour — the section it opens into (.s-surf3) is that exact same tone,
              so the hand-off is same-on-same, invisible. No per-frame colour blend, nothing to
@@ -644,7 +688,7 @@
           if (aura2) aura2.style.opacity = Math.max(0, 1 - pp * 4).toFixed(3);
           /* near the end the star's mint/gold arms fade out — the pink-3 disc stays, so what's
              left is a clean navy field handing off into the surf-3 section, seamless */
-          starEl.style.opacity = pp > 0.9 ? Math.max(0, 1 - (pp - 0.9) / 0.08).toFixed(3) : "1";
+          if (!portalCSS) starEl.style.opacity = pp > 0.9 ? Math.max(0, 1 - (pp - 0.9) / 0.08).toFixed(3) : "1"; /* compositor phones: shmPortalStar keyframes own this fade, on the same timeline */
         }
         requestAnimationFrame(ptick);
       })();
