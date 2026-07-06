@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Polaris · Harbourview Dental</title>
+<link rel="icon" href="/polaris-demo/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/polaris-demo/polaris.css">
+</head>
+<body>
+
+<!-- login (white-label moment: Polaris logo, one demo identity) -->
+<div class="login" id="login">
+  <div class="card">
+    <div class="pmark">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#23272F" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
+      <b>POLARIS</b>
+    </div>
+    <p class="sub">Harbourview Dental · Front Desk</p>
+    <button class="who" id="loginBtn" type="button">
+      <span class="av">MC</span>
+      <span><b>Continue as Maya Chen</b><small>Front Desk</small></span>
+    </button>
+    <p class="note">Demo environment — sample data. No real patients, calls or messages.</p>
+  </div>
+</div>
+
+<div class="app">
+  <aside class="side">
+    <div class="pmark">
+      <svg viewBox="0 0 48 48" aria-hidden="true" width="20" height="20"><path fill="#23272F" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
+      <b>POLARIS</b>
+    </div>
+    <nav class="nav" aria-label="Main">
+      <button data-v="dashboard" data-ic="dash">Dashboard</button>
+      <button data-v="conversations" data-ic="convo">Conversations</button>
+      <button data-v="calendars" data-ic="cal">Calendars</button>
+      <button data-v="contacts" data-ic="people">Contacts</button>
+      <button data-v="opportunities" data-ic="opp">Opportunities</button>
+      <button data-v="automation" data-ic="auto">Automation</button>
+      <button data-v="reputation" data-ic="rep">Reputation</button>
+    </nav>
+    <nav class="nav settings" aria-label="Settings">
+      <button data-v="settings" data-ic="gear">Settings</button>
+    </nav>
+  </aside>
+
+  <header class="topbar">
+    <span class="loc">Harbourview Dental</span>
+    <span class="gsearch">⌕ Search contacts, conversations…</span>
+    <button class="bell" aria-label="Notifications"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#6B7280" stroke-width="1.5"><path d="M8 1.8a4.3 4.3 0 0 0-4.3 4.3c0 3.2-1.2 4.4-1.2 4.4h11s-1.2-1.2-1.2-4.4A4.3 4.3 0 0 0 8 1.8zM6.4 13a1.7 1.7 0 0 0 3.2 0"/></svg><i id="bellCount" hidden>0</i></button>
+    <span class="meav" title="Maya Chen — Front Desk">MC</span>
+  </header>
+
+  <main class="main">
+
+    <section class="view" id="v-dashboard">
+      <div class="vhead">
+        <h1>Main Dashboard</h1>
+        <span class="pill">Last 30 days ▾</span><span class="pill">✎</span><span class="pill">⋯</span><span class="pill">Quick Filters</span>
+        <span class="pill" style="margin-left:auto">New Patient Pipeline · by created date</span>
+      </div>
+      <div class="dgrid">
+        <div class="card widget"><h3>Opportunity Status</h3><div id="wDonut"></div></div>
+        <div class="card widget"><h3>Opportunity Value</h3><div id="wValue"></div></div>
+        <div class="card widget"><h3>Conversion Rate</h3><div id="wConv"></div></div>
+        <div class="card widget"><h3>Appointments Booked</h3><div id="wAppt"></div></div>
+        <div class="card widget wide"><h3>Funnel <small>cumulative</small></h3><div class="fun" id="wFunnel"></div></div>
+        <div class="card widget wide"><h3>Stages Distribution <small>open only</small></h3><div id="wStages"></div></div>
+        <div class="card widget wide"><h3>Tasks</h3><div class="tlist" id="wTasks"></div></div>
+        <div class="card widget wide"><h3>Manual Actions</h3><div id="wManual"></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="v-conversations">
+      <div class="vhead"><h1>Conversations</h1></div>
+      <div class="convo">
+        <div class="rail">
+          <button class="on">My Inbox</button><button>Team Inbox</button><button>Internal Chat</button><button>Starred</button>
+        </div>
+        <div class="clist">
+          <div class="search"><input placeholder="Search" aria-label="Search conversations"></div>
+          <div class="sort">Sort: Latest ▾ · Longest SLA Overdue</div>
+          <div id="clist"></div>
+        </div>
+        <div class="thread">
+          <div class="thead2" id="thName"></div>
+          <div class="tmsgs" id="tmsgs"></div>
+          <div class="composer">
+            <span class="chsel">SMS ▾</span>
+            <input placeholder="Type a message…" aria-label="Message">
+            <button class="send" type="button">Send</button>
+          </div>
+        </div>
+        <div class="cpanel">
+          <div class="tabs"><span class="on">Contact</span><span>Activities</span><span>Associations</span><span>Documents</span><span>Payments</span></div>
+          <div id="cpFields"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="v-calendars">
+      <div class="vhead">
+        <h1>Calendars</h1>
+        <span class="pill">Week ▾</span><span class="pill">Manage View</span>
+        <span class="pill" style="margin-left:auto">Dr. Marsh · Dr. Reid · Priya Nair</span>
+      </div>
+      <div class="cal-tabs">
+        <button class="on" data-ct="grid">Calendar view</button>
+        <button data-ct="list">Appointment List View</button>
+      </div>
+      <div id="calGridWrap"><div class="calgrid2" id="calgrid"></div>
+        <p class="tfoot">All times shown in the clinic's timezone.</p></div>
+      <div id="calListWrap" hidden>
+        <div class="smart"><span class="on">Upcoming</span><span>Cancelled</span><span>All</span><span class="ghost">+ Smart List</span></div>
+        <div class="card lrows" id="apptRows" style="border-radius:0 0 10px 10px"></div>
+      </div>
+    </section>
+
+    <section class="view" id="v-contacts">
+      <div class="vhead"><h1>Contacts</h1><span class="pill">Advanced Filters</span><span class="pill" style="margin-left:auto">⚙ Columns</span></div>
+      <div class="smart"><span class="on">All</span><span>recall due</span><span>no-shows</span><span class="ghost">+ Add smart list</span></div>
+      <div class="card" style="border-radius:0 0 10px 10px;overflow-x:auto">
+        <table class="ctable"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Created</th><th>Last Activity</th><th>Tags</th></tr></thead>
+        <tbody id="ctBody"></tbody></table>
+        <div class="tfoot" id="ctFoot"></div>
+      </div>
+    </section>
+
+    <section class="view" id="v-opportunities">
+      <div class="vhead">
+        <h1>Opportunities</h1>
+        <span class="pill">New Patient Pipeline ▾</span><span class="pill">Advanced Filters</span>
+        <span class="pill" style="margin-left:auto">Board · List</span><span class="pill">Manage Fields</span>
+      </div>
+      <div class="kwrap"><div class="kanban" id="kanban"></div></div>
+      <div class="closedrow" id="closedRow"></div>
+    </section>
+
+    <section class="view" id="v-automation">
+      <div class="vhead"><h1>Workflows</h1><button class="btn-p" style="margin-left:auto" type="button">Create Workflow</button></div>
+      <div class="aihint">✨ What do you want to automate? <span class="tag">remind patients</span><span class="tag">request reviews</span><span class="tag">recall dormant patients</span></div>
+      <div class="card wtable" id="wfRows"></div>
+
+      <div id="builderWrap" hidden style="margin-top:16px">
+        <div class="card builder">
+          <div class="btabs">
+            <span id="btnBackWf" style="color:var(--blue)">← All workflows</span>
+            <span class="on">Builder</span><span>Settings</span><span>Enrollment History</span><span>Execution Logs</span>
+            <span class="btop"><span class="pill">Test Workflow</span><span class="pub on">PUBLISHED</span></span>
+          </div>
+          <div style="padding:6px 15px;color:var(--mut);font-size:12px">Missed Call → Instant Text-Back · read-only in demo</div>
+          <div class="canvas" id="wfCanvas"></div>
+          <div style="padding:0 15px 6px;font-weight:600;font-size:12px">Enrollment History</div>
+          <div class="enrolls" id="enrollRows" style="background:#fff;border-radius:0 0 10px 10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="v-reputation">
+      <div class="vhead"><h1>Reputation</h1><button class="btn-p" style="margin-left:auto" type="button">Send Review Request</button></div>
+      <div class="smart" style="margin-bottom:12px"><span class="on">Overview</span><span>Requests</span><span>Reviews</span><span>Widgets</span></div>
+      <div class="repgrid" id="repGrid" style="margin-bottom:12px"></div>
+      <div class="card" id="repRows" style="margin-bottom:12px"></div>
+      <div style="font-weight:600;font-size:12px;margin:0 0 6px 2px">Latest Review Requests</div>
+      <div class="card lrows" id="reqRows"></div>
+    </section>
+
+    <section class="view" id="v-settings">
+      <div class="vhead"><h1>Settings</h1></div>
+      <div class="card setcard">
+        <div class="fld"><label>Business Name</label>Harbourview Dental</div>
+        <div class="fld"><label>Timezone</label>Clinic local time</div>
+        <div class="fld"><label>Phone, email &amp; integrations</label>Managed by Stellar Haus Media</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<span class="demochip">Demo environment — sample data</span>
+
+<div class="demobar" role="region" aria-label="Demo controls">
+  <div class="dl">SIMULATION · NO REAL CALLS OR TEXTS ARE SENT</div>
+  <div class="cap" id="simCap">Plays a scripted missed-call recovery, start to finish, across every screen. ~25 seconds.</div>
+  <div class="row3">
+    <button class="go" id="simGo" type="button">▶ Simulate a missed call</button>
+    <button id="simReset" type="button">Reset demo</button>
+  </div>
+</div>
+
+<script src="/polaris-demo/polaris-data.js"></script>
+<script src="/polaris-demo/polaris-app.js"></script>
+</body>
+</html>
