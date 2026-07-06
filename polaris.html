@@ -77,7 +77,7 @@ html.anim .rv.in{opacity:1;transform:none}
 .mark small .shm{color:var(--mint);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(95,227,198,.4);transition:border-color .2s,color .2s}
 .mark small .shm:hover,.mark small .shm:focus-visible{color:#7CE8CF;border-color:#7CE8CF}
 .top .btn{margin-left:auto;padding:10px 20px;font-size:14px;min-height:40px}
-@media (max-width:560px){.mark small{display:none}.top .btn{padding:9px 16px}}
+@media (max-width:560px){.mark svg{width:22px;height:22px}.mark b{font-size:12.5px;letter-spacing:.28em}.mark small{font-size:9px}.top .btn{padding:9px 15px;font-size:13px}}
 
 /* ── hero ───────────────────────────────────────────────── */
 .hero{position:relative;overflow:hidden;padding:clamp(58px,10vw,116px) 0 clamp(40px,6vw,72px)}
@@ -116,36 +116,18 @@ h1 em{font-style:normal;color:var(--amber)}
 .route-head{max-width:640px;margin-bottom:clamp(30px,5vw,58px)}
 .route-head h2{color:var(--tx-l)}
 .route-head p{color:var(--mut-l);font-size:clamp(1.05rem,1.7vw,1.24rem);margin-top:16px;max-width:52ch;text-wrap:pretty}
-.route{position:relative;max-width:840px;margin:0 auto}
-.stop{position:relative;display:grid;grid-template-columns:auto 1fr;gap:clamp(16px,2.6vw,26px);align-items:start;
-  max-width:460px;padding:6px 0}
-.stop .node{position:relative;z-index:2;flex:none;width:52px;height:52px;border-radius:50%;background:var(--graphite-2);
-  display:grid;place-items:center;box-shadow:0 10px 26px -12px rgba(20,25,29,.5),inset 0 0 0 1px rgba(237,155,64,.25)}
-.stop .node span{font-family:var(--fm);font-weight:700;font-size:15px;color:var(--amber)}
-.stop .body h3{font-family:var(--fd);font-weight:700;letter-spacing:-.02em;font-size:clamp(1.18rem,2.3vw,1.5rem);line-height:1.14}
+/* five distinct capabilities — a two-column grid, each marked with the Polaris needle
+   (not a numbered/arrowed sequence; these are parallel, not steps) */
+.route{display:grid;gap:clamp(24px,3.6vw,40px) clamp(34px,5vw,60px)}
+@media (min-width:720px){.route{grid-template-columns:1fr 1fr}
+  .stop:last-child{grid-column:1 / -1;justify-self:center;width:calc(50% - 30px)}}
+.stop{display:grid;grid-template-columns:auto 1fr;gap:clamp(13px,1.8vw,18px);align-items:start;
+  padding-top:clamp(18px,2.4vw,24px);border-top:1px solid var(--line-l)}
+.stop .pt-mark{width:26px;height:26px;flex:none;margin-top:3px}
+.stop .pt-mark path{fill:var(--amber-deep)}
+.stop .body h3{font-family:var(--fd);font-weight:700;letter-spacing:-.02em;font-size:clamp(1.18rem,2.3vw,1.5rem);line-height:1.14;color:var(--tx-l)}
 .stop .body .when{font-family:var(--fm);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--amber-deep);margin-bottom:5px;display:block}
 .stop .body p{color:var(--mut-l);font-size:1rem;margin-top:7px;max-width:42ch}
-.stop.r{margin-left:auto;justify-items:start}
-.leg{display:block;width:100%;height:clamp(76px,10vw,116px);overflow:visible;position:relative}
-.leg>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.leg path{fill:none;stroke:var(--amber);stroke-width:2.4;stroke-linecap:round}
-.leg .m{display:none}
-/* arrowhead is its OWN undistorted svg, pinned to the curve's exact end (fixed %-of-viewBox) */
-.leg .tip{position:absolute;top:97%;transform:translate(-50%,-50%);width:15px;height:13px;color:var(--amber);pointer-events:none;line-height:0}
-.leg .tip>svg{position:static;width:15px;height:13px;display:block}
-.leg .tip path{fill:currentColor;stroke:none}
-.leg.lr .tip{left:78.75%}
-.leg.rl .tip{left:21.25%}
-html.anim .leg path{transition:stroke-dashoffset 1.05s var(--ease)}
-html.anim .leg .tip{opacity:0}
-html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
-@media (max-width:760px){
-  .leg{height:clamp(64px,14vw,88px)}
-  .leg .d{display:none}
-  .leg .m{display:inline}
-  .leg .tip{left:7.5%!important;top:98%}
-  .stop{max-width:none}
-}
 .route-foot{margin-top:clamp(36px,5vw,56px);display:flex;align-items:center;gap:16px;flex-wrap:wrap;
   padding-top:clamp(28px,4vw,40px);border-top:1px solid var(--line-l)}
 .route-foot p{font-family:var(--fd);font-weight:700;font-size:clamp(1.15rem,2.2vw,1.55rem);letter-spacing:-.02em;color:var(--tx-l);max-width:26ch}
@@ -246,37 +228,29 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
   <section class="route-sec">
     <div class="wrap">
       <div class="route-head rv">
-        <h2>Every patient takes a <span class="amber">route</span>.<br>Polaris walks every step of it.</h2>
-        <p>From a first ring to a five-star review, a patient passes through five moments where practices quietly lose them. Here's where Polaris stands in each one.</p>
+        <h2>Five moments a clinic <span class="amber">loses a patient</span>.<br>Polaris covers all five.</h2>
+        <p>From a first ring to a five-star review, there are five moments where practices quietly lose people. Here's where Polaris stands in each one.</p>
       </div>
 
       <div class="route">
-        <div class="stop l rv">
-          <div class="node"><span>1</span></div>
+        <div class="stop rv">
+          <svg class="pt-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
           <div class="body"><span class="when">The call rings out</span><h3>It texts back before they move on.</h3><p>Your desk is with a patient. Polaris texts the caller back within seconds — with a link to book. The one who'd have dialled the next clinic stays yours.</p></div>
         </div>
-        <div class="leg lr" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M170 6 C 170 90, 630 34, 630 116"></path><path class="m" d="M60 2 C 24 44, 60 82, 60 118"></path></svg><span class="tip"><svg viewBox="0 0 15 13"><path d="M7.5 13 L0 0 L15 0 Z"/></svg></span></div>
-
-        <div class="stop r rv">
-          <div class="node"><span>2</span></div>
+        <div class="stop rv">
+          <svg class="pt-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
           <div class="body"><span class="when">The day approaches</span><h3>It chases the confirmation.</h3><p>A friendly reminder chain — days before, the day before, hours before — and a reply confirms them. Your team sees at a glance who's solid and who needs a nudge.</p></div>
         </div>
-        <div class="leg rl" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M630 6 C 630 90, 170 34, 170 116"></path><path class="m" d="M60 2 C 24 44, 60 82, 60 118"></path></svg><span class="tip"><svg viewBox="0 0 15 13"><path d="M7.5 13 L0 0 L15 0 Z"/></svg></span></div>
-
-        <div class="stop l rv">
-          <div class="node"><span>3</span></div>
+        <div class="stop rv">
+          <svg class="pt-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
           <div class="body"><span class="when">Someone slips through</span><h3>It wins the no-show back.</h3><p>Anyone who misses gets a same-day "life happens — want a new time?" message, then a gentle follow-up — with a one-tap link to pick a new slot, the same day.</p></div>
         </div>
-        <div class="leg lr" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M170 6 C 170 90, 630 34, 630 116"></path><path class="m" d="M60 2 C 24 44, 60 82, 60 118"></path></svg><span class="tip"><svg viewBox="0 0 15 13"><path d="M7.5 13 L0 0 L15 0 Z"/></svg></span></div>
-
-        <div class="stop r rv">
-          <div class="node"><span>4</span></div>
+        <div class="stop rv">
+          <svg class="pt-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
           <div class="body"><span class="when">A patient drifts away</span><h3>It brings them home.</h3><p>Patients overdue for a visit get a warm nudge with a booking link — the quiet revenue sitting in every practice's records, reactivated on autopilot.</p></div>
         </div>
-        <div class="leg rl" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M630 6 C 630 90, 170 34, 170 116"></path><path class="m" d="M60 2 C 24 44, 60 82, 60 118"></path></svg><span class="tip"><svg viewBox="0 0 15 13"><path d="M7.5 13 L0 0 L15 0 Z"/></svg></span></div>
-
-        <div class="stop l rv">
-          <div class="node"><span>5</span></div>
+        <div class="stop rv">
+          <svg class="pt-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
           <div class="body"><span class="when">The visit goes well</span><h3>It asks for the review.</h3><p>One honest request for a Google review, at the right moment, every time. No filtering, no gating — just asked, so your reputation compounds.</p></div>
         </div>
       </div>
@@ -402,18 +376,8 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
 
   if (reduce) return; /* content is already fully visible; skip entrance motion */
   document.documentElement.classList.add("anim");
-  /* prime every connector stroke (desktop + mobile variant) as an undrawn dashed line;
-     the .d/.m classes scope this to the route curves only — never the arrowhead tip */
-  [].slice.call(document.querySelectorAll(".leg path.d, .leg path.m")).forEach(function (p) {
-    try { var L = Math.ceil(p.getTotalLength()); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; } catch (e) {}
-  });
-  var els = [].slice.call(document.querySelectorAll(".rv, .leg"));
-  function reveal(el) {
-    el.classList.add("in");
-    if (el.classList.contains("leg")) {
-      [].slice.call(el.querySelectorAll("path.d, path.m")).forEach(function (p) { p.style.strokeDashoffset = "0"; });
-    }
-  }
+  var els = [].slice.call(document.querySelectorAll(".rv"));
+  function reveal(el) { el.classList.add("in"); }
   if (!("IntersectionObserver" in window)) { els.forEach(reveal); return; }
   var io = new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
