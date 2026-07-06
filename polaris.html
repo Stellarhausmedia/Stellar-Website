@@ -19,200 +19,288 @@
 <!-- /HREFLANG -->
 <meta name="theme-color" content="#0D1015">
 <link rel="icon" href="polaris/favicon.svg" type="image/svg+xml">
+<link rel="preload" as="image" href="polaris/p-builder.webp">
 <style>
 /* ============================================================================
-   POLARIS — standalone product page. Deliberately NOT the Stellar Haus site
-   chrome: Polaris is a standalone product with its own identity (Graphite
-   Signal: instrument graphite + one warm amber, the compass-needle mark).
-   Self-contained: no site.css, no app.js, no libraries.
+   POLARIS — standalone product page. Its own identity (Graphite Signal:
+   instrument graphite + one warm amber, the compass-needle mark). The through-
+   line is navigation — Polaris is the fixed star a clinic steers a patient by.
+   Self-contained: no site chrome, no shared CSS/JS, no external requests.
    ========================================================================== */
 @font-face{font-family:"Bricolage";src:url("fonts/bricolage-grotesque.woff2") format("woff2");font-weight:200 800;font-display:swap}
 @font-face{font-family:"Hanken";src:url("fonts/hanken-grotesk.woff2") format("woff2");font-weight:100 900;font-display:swap}
 @font-face{font-family:"JBMono";src:url("fonts/jetbrains-mono.woff2") format("woff2");font-weight:100 800;font-display:swap}
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --ink:#0D1015; --graphite:#23272F; --graphite-2:#14171D;
-  --amber:#ED9B40; --amber-deep:#9A5B14;
-  --paper:#F7F8FA; --card:#FFFFFF;
-  --tx-d:#EDEFF3; --mut-d:#9AA3B2; --line-d:rgba(237,239,243,.13);
-  --tx-l:#14191D; --mut-l:#57616B; --line-l:#E5E7EB;
+  --ink:#0D1015; --graphite:#23272F; --graphite-2:#14171D; --graphite-3:#1B1F27;
+  --amber:#ED9B40; --amber-lo:#F0A857; --amber-deep:#8A4E10;
+  --paper:#F6F4F0; --paper-2:#FFFFFF;
+  --tx-d:#EDEFF3; --mut-d:#98A0AC; --line-d:rgba(237,239,243,.12);
+  --tx-l:#191C21; --mut-l:#5A626D; --line-l:#E4E1DB;
   --fd:"Bricolage",system-ui,sans-serif; --fb:"Hanken",system-ui,Arial,sans-serif; --fm:"JBMono",ui-monospace,monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
 }
 html{background:var(--ink);scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-body{background:var(--ink);color:var(--tx-d);font-family:var(--fb);font-size:16px;line-height:1.6;overflow-x:clip}
+body{background:var(--ink);color:var(--tx-d);font-family:var(--fb);font-size:clamp(15.5px,1.05vw,17px);line-height:1.62;overflow-x:clip}
 a{color:inherit}
-.wrap{max-width:1080px;margin:0 auto;padding:0 clamp(18px,4.5vw,44px)}
-.k{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}
-.btn{display:inline-flex;align-items:center;gap:9px;background:var(--amber);color:var(--graphite-2);
-  font-weight:700;font-size:15px;border-radius:999px;padding:13px 26px;text-decoration:none;
-  transition:transform .2s ease,box-shadow .2s ease;min-height:44px}
-.btn:hover{transform:translateY(-2px);box-shadow:0 14px 34px -12px rgba(237,155,64,.55)}
-.btn.dark{background:var(--graphite);color:var(--paper)}
-:focus-visible{outline:2.5px solid var(--amber);outline-offset:3px;border-radius:6px}
+img,video{max-width:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:0 clamp(20px,5vw,52px)}
+.narrow{max-width:760px}
+h2{font-family:var(--fd);font-weight:800;letter-spacing:-.028em;line-height:1.04;font-size:clamp(2rem,4.8vw,3.2rem);text-wrap:balance}
+h2 .amber{color:var(--amber)}
+.lead{font-size:clamp(1.08rem,1.8vw,1.32rem);line-height:1.55;color:var(--mut-d);max-width:60ch;text-wrap:pretty}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--amber);color:var(--graphite-2);
+  font-family:var(--fd);font-weight:700;font-size:15.5px;border-radius:999px;padding:14px 28px;text-decoration:none;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),background .2s;min-height:46px}
+.btn:hover{transform:translateY(-2px);box-shadow:0 16px 40px -14px rgba(237,155,64,.6);background:var(--amber-lo)}
+.btn .arw{transition:transform .35s var(--ease)}
+.btn:hover .arw{transform:translateX(4px)}
+.btn.ink{background:var(--graphite-2);color:var(--paper);box-shadow:0 12px 34px -16px rgba(0,0,0,.7)}
+.btn.ink:hover{background:#0A0C10;box-shadow:0 18px 44px -14px rgba(0,0,0,.85)}
+:focus-visible{outline:2.5px solid var(--amber);outline-offset:3px;border-radius:8px}
 
-/* reveals — content visible by default; JS only adds motion when allowed */
+/* reveal — visible by default; motion is an enhancement layered only when allowed */
 .rv{opacity:1;transform:none}
-html.anim .rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+html.anim .rv{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 html.anim .rv.in{opacity:1;transform:none}
 
-/* ---------------- header ---------------- */
-.top{position:sticky;top:0;z-index:50;background:rgba(13,16,21,.88);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line-d)}
-.top .wrap{display:flex;align-items:center;gap:12px;height:64px}
-.mark{display:inline-flex;align-items:center;gap:10px;text-decoration:none}
-.mark svg{width:24px;height:24px}
-.mark b{font-family:var(--fm);font-weight:600;font-size:14px;letter-spacing:.3em}
-.mark small{font-size:10.5px;color:var(--mut-d);letter-spacing:.02em;margin-top:3px}
-.top .btn{margin-left:auto;padding:9px 18px;font-size:13.5px}
-@media (max-width:560px){.mark small{display:none}}
+/* ── header ─────────────────────────────────────────────── */
+.top{position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--ink) 86%,transparent);
+  backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line-d)}
+.top .wrap{display:flex;align-items:center;gap:14px;height:66px}
+.mark{display:inline-flex;align-items:center;gap:11px;text-decoration:none}
+.mark svg{width:26px;height:26px;filter:drop-shadow(0 0 10px rgba(237,155,64,.4))}
+.mark .wm{display:flex;flex-direction:column;line-height:1}
+.mark b{font-family:var(--fm);font-weight:600;font-size:14px;letter-spacing:.34em}
+.mark small{font-size:10px;color:var(--mut-d);letter-spacing:.03em;margin-top:4px}
+.top .btn{margin-left:auto;padding:10px 20px;font-size:14px;min-height:40px}
+@media (max-width:560px){.mark small{display:none}.top .btn{padding:9px 16px}}
 
-/* ---------------- hero ---------------- */
-.hero{padding:clamp(64px,11vw,120px) 0 clamp(30px,5vw,54px);position:relative;overflow:hidden}
-.hero .glow{position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:640px;height:640px;
-  background:radial-gradient(circle,rgba(237,155,64,.14),transparent 62%);pointer-events:none}
-.hero h1{font-family:var(--fd);font-weight:800;font-size:clamp(2.5rem,7vw,4.6rem);letter-spacing:-.03em;
-  line-height:1.03;max-width:13ch}
-.hero h1 em{font-style:normal;color:var(--amber)}
-.hero .lead{color:var(--mut-d);font-size:clamp(1.05rem,1.9vw,1.25rem);max-width:56ch;margin:22px 0 30px}
-.cta-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.cta-row .note{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--mut-d);text-transform:uppercase}
+/* ── hero ───────────────────────────────────────────────── */
+.hero{position:relative;overflow:hidden;padding:clamp(58px,10vw,116px) 0 clamp(40px,6vw,72px)}
+.hero .aur{position:absolute;inset:-30% -10% auto -10%;height:720px;pointer-events:none;
+  background:radial-gradient(60% 60% at 50% 0%,rgba(237,155,64,.16),transparent 70%)}
+.hero .field{position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(circle at 1px 1px,rgba(237,239,243,.09) 1px,transparent 0);
+  background-size:38px 38px;mask-image:radial-gradient(120% 80% at 50% 0%,#000 30%,transparent 78%)}
+.hero .wrap{position:relative}
+.h-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--amber);border:1px solid rgba(237,155,64,.35);border-radius:999px;
+  padding:6px 13px 6px 10px;background:rgba(237,155,64,.06)}
+.h-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber)}
+h1{font-family:var(--fd);font-weight:800;letter-spacing:-.035em;line-height:1;margin:24px 0 0;
+  font-size:clamp(2.7rem,7.6vw,5.4rem);max-width:14ch;text-wrap:balance}
+h1 em{font-style:normal;color:var(--amber)}
+.hero .lead{margin:22px 0 34px}
+.cta-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.cta-row .aside{font-family:var(--fm);font-size:11px;letter-spacing:.09em;color:var(--mut-d);text-transform:uppercase}
 
-/* ---------------- video ---------------- */
-.vid{padding:clamp(20px,4vw,44px) 0 clamp(56px,9vw,96px)}
-.vid figure{margin:0}
-.vid video{width:100%;height:auto;display:block;border-radius:16px;border:1px solid var(--line-d);
-  background:var(--graphite-2);box-shadow:0 40px 90px -40px rgba(0,0,0,.8)}
-.vid figcaption{font-family:var(--fm);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--mut-d);margin-top:12px;display:flex;gap:10px;align-items:center}
-.vid figcaption i{font-style:normal;color:var(--amber)}
+/* ── video ──────────────────────────────────────────────── */
+.stage{padding:clamp(18px,3.5vw,40px) 0 clamp(56px,9vw,100px)}
+.player{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line-d);
+  background:var(--graphite-2);box-shadow:0 50px 110px -50px rgba(0,0,0,.9),0 0 0 1px rgba(237,155,64,.06);isolation:isolate}
+.player video{display:block;width:100%;height:auto}
+.player figcaption{position:absolute;left:14px;bottom:14px;z-index:2;display:flex;align-items:center;gap:8px;
+  font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-d);
+  background:rgba(13,16,21,.7);backdrop-filter:blur(6px);border:1px solid var(--line-d);border-radius:8px;padding:6px 11px;pointer-events:none}
+.player figcaption i{font-style:normal;color:var(--amber)}
 
-/* ---------------- light body ---------------- */
-.light{background:var(--paper);color:var(--tx-l)}
-.light .k{color:var(--amber-deep)}
-section.pad{padding:clamp(60px,9vw,104px) 0}
-h2{font-family:var(--fd);font-weight:800;font-size:clamp(1.8rem,4.4vw,2.9rem);letter-spacing:-.025em;line-height:1.08;max-width:22ch;margin:10px 0 14px}
-.light .sub{color:var(--mut-l);font-size:clamp(1rem,1.7vw,1.15rem);max-width:58ch;margin-bottom:8px}
-.jobs{list-style:none;margin-top:26px;display:grid;gap:0}
-.jobs li{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line-l);font-size:15.5px;color:var(--mut-l);max-width:70ch}
-.jobs li:last-child{border-bottom:0}
-.jobs b{color:var(--tx-l)}
-.jobs .tick{flex:none;width:26px;height:26px;border-radius:8px;background:var(--amber);color:var(--graphite-2);
-  display:grid;place-items:center;font-weight:800;font-size:13px;margin-top:2px}
+/* ── the route (patient journey) ────────────────────────── */
+.route-sec{background:var(--paper);color:var(--tx-l);padding:clamp(64px,9vw,120px) 0}
+.route-head{max-width:640px;margin-bottom:clamp(30px,5vw,58px)}
+.route-head h2{color:var(--tx-l)}
+.route-head p{color:var(--mut-l);font-size:clamp(1.05rem,1.7vw,1.24rem);margin-top:16px;max-width:52ch;text-wrap:pretty}
+.route{position:relative;max-width:840px;margin:0 auto}
+.stop{position:relative;display:grid;grid-template-columns:auto 1fr;gap:clamp(16px,2.6vw,26px);align-items:start;
+  max-width:460px;padding:6px 0}
+.stop .node{position:relative;z-index:2;flex:none;width:52px;height:52px;border-radius:50%;background:var(--graphite-2);
+  display:grid;place-items:center;box-shadow:0 10px 26px -12px rgba(20,25,29,.5),inset 0 0 0 1px rgba(237,155,64,.25)}
+.stop .node span{font-family:var(--fm);font-weight:700;font-size:15px;color:var(--amber)}
+.stop .body h3{font-family:var(--fd);font-weight:700;letter-spacing:-.02em;font-size:clamp(1.18rem,2.3vw,1.5rem);line-height:1.14}
+.stop .body .when{font-family:var(--fm);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--amber-deep);margin-bottom:5px;display:block}
+.stop .body p{color:var(--mut-l);font-size:1rem;margin-top:7px;max-width:42ch}
+.stop.r{margin-left:auto;justify-items:start}
+.leg{display:block;width:100%;height:clamp(76px,10vw,116px);overflow:visible;position:relative}
+.leg svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.leg path{fill:none;stroke:var(--amber);stroke-width:2.4;stroke-linecap:round}
+.leg .head{fill:var(--amber);stroke:none}
+.leg .m{display:none}
+html.anim .leg path{transition:stroke-dashoffset 1.05s var(--ease)}
+html.anim .leg .head{opacity:0;transition:opacity .3s ease .85s}
+html.anim .leg.in .head{opacity:1}
+@media (max-width:760px){
+  .leg{height:clamp(64px,14vw,88px)}
+  .leg .d{display:none}
+  .leg .m{display:inline}
+  .stop{max-width:none}
+}
+.route-foot{margin-top:clamp(36px,5vw,56px);display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding-top:clamp(28px,4vw,40px);border-top:1px solid var(--line-l)}
+.route-foot p{font-family:var(--fd);font-weight:700;font-size:clamp(1.15rem,2.2vw,1.55rem);letter-spacing:-.02em;color:var(--tx-l);max-width:26ch}
 
-.shot{margin:clamp(20px,3.4vw,34px) 0 0}
-.shot img{width:100%;height:auto;display:block;border-radius:14px;border:1px solid var(--line-l);
-  box-shadow:0 30px 70px -35px rgba(20,25,29,.4)}
-.shot figcaption{font-family:var(--fm);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut-l);margin-top:10px}
+/* ── screens ────────────────────────────────────────────── */
+.screens{background:var(--paper-2);color:var(--tx-l);padding:clamp(64px,9vw,116px) 0}
+.screens .intro{max-width:620px;margin-bottom:clamp(28px,4vw,46px)}
+.screens h2{color:var(--tx-l)}
+.screens .intro p{color:var(--mut-l);font-size:clamp(1.05rem,1.7vw,1.22rem);margin-top:14px;text-wrap:pretty}
+.shot-grid{display:grid;gap:clamp(16px,2.4vw,26px)}
+.shot{position:relative}
+.shot img{display:block;width:100%;height:auto;border-radius:14px;border:1px solid var(--line-l);
+  box-shadow:0 36px 80px -44px rgba(20,25,29,.5)}
+.shot .cap{font-family:var(--fm);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut-l);
+  margin-top:12px;padding-left:2px}
+.shot.wide{grid-column:1/-1}
+@media (min-width:800px){.shot-grid{grid-template-columns:1fr 1fr}}
 
-/* ---------------- honest (dark) ---------------- */
-.honest{background:var(--graphite-2);color:var(--tx-d)}
-.honest .jobs li{border-color:var(--line-d);color:var(--mut-d)}
-.honest .jobs b{color:var(--tx-d)}
-.honest .jobs .tick{background:transparent;border:1.5px solid var(--amber);color:var(--amber)}
+/* ── honesty (dark) ─────────────────────────────────────── */
+.honest{background:var(--graphite-2);padding:clamp(64px,9vw,116px) 0}
+.honest h2{max-width:16ch}
+.honest .grid{display:grid;gap:clamp(20px,3vw,34px);margin-top:clamp(32px,4vw,52px)}
+@media (min-width:820px){.honest .grid{grid-template-columns:repeat(3,1fr)}}
+.pledge{padding-top:22px;border-top:2px solid rgba(237,155,64,.4)}
+.pledge h4{font-family:var(--fd);font-weight:700;font-size:1.16rem;letter-spacing:-.015em;line-height:1.2}
+.pledge p{color:var(--mut-d);font-size:.98rem;margin-top:10px;line-height:1.55}
+.pledge b{color:var(--tx-d)}
 
-/* ---------------- offer (amber field) ---------------- */
-.offer{background:var(--amber);color:var(--graphite-2)}
-.offer .k{color:var(--amber-deep)}
-.offer .sub{color:#5C4218;font-size:clamp(1rem,1.8vw,1.2rem);max-width:60ch}
-.offer .cta-row{margin-top:28px}
-.offer .note{color:#7A5A22}
+/* ── offer (amber drench) ───────────────────────────────── */
+.offer{background:linear-gradient(160deg,var(--amber) 0%,var(--amber-lo) 100%);color:var(--graphite-2);
+  padding:clamp(66px,10vw,120px) 0;position:relative;overflow:hidden}
+.offer .stamp{position:absolute;right:-40px;top:50%;transform:translateY(-50%);width:min(360px,42vw);opacity:.16;pointer-events:none}
+.offer .wrap{position:relative}
+.offer h2{max-width:15ch}
+.offer .sub{font-size:clamp(1.06rem,1.9vw,1.28rem);line-height:1.55;color:#5A3B0E;max-width:58ch;margin-top:16px;text-wrap:pretty}
+.offer .cta-row{margin-top:32px}
+.offer .aside{color:#7A5417}
 
-/* ---------------- footer ---------------- */
-.foot{padding:44px 0 34px;border-top:1px solid var(--line-d)}
-.foot .wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.foot .mark svg{width:20px;height:20px}
+/* ── footer ─────────────────────────────────────────────── */
+.foot{padding:46px 0 38px;border-top:1px solid var(--line-d)}
+.foot .wrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.foot .mark svg{width:20px;height:20px;filter:none}
 .foot .mark b{font-size:12px}
-.foot p{font-size:13px;color:var(--mut-d)}
-.foot a{color:var(--tx-d);text-decoration:underline;text-decoration-color:var(--amber)}
+.foot p{font-size:13.5px;color:var(--mut-d)}
+.foot a{color:var(--tx-d);text-decoration:none;border-bottom:1px solid var(--amber)}
 .foot .fine{margin-left:auto;font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut-d)}
-@media (max-width:700px){.foot .fine{margin-left:0}}
+@media (max-width:720px){.foot .fine{margin-left:0;width:100%}}
 </style>
 </head>
 <body>
 
 <header class="top">
   <div class="wrap">
-    <a class="mark" href="#" aria-label="Polaris — top of page">
+    <a class="mark" href="#top" aria-label="Polaris — top of page">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ED9B40" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
-      <span><b>POLARIS</b><br><small>by Stellar Haus Media</small></span>
+      <span class="wm"><b>POLARIS</b><small>by Stellar Haus Media</small></span>
     </a>
     <a class="btn" href="contact.html">Enquire now</a>
   </div>
 </header>
 
-<main>
+<main id="top">
   <section class="hero">
-    <div class="glow" aria-hidden="true"></div>
+    <div class="aur" aria-hidden="true"></div>
+    <div class="field" aria-hidden="true"></div>
     <div class="wrap">
-      <span class="k rv">The front desk system for dental clinics</span>
+      <span class="h-badge rv"><span class="dot"></span>Works with the software your clinic already runs</span>
       <h1 class="rv">The front desk that <em>never misses</em>.</h1>
-      <p class="lead rv">Polaris answers the calls your desk can't get to, chases confirmations so patients actually show, and quietly brings lapsed patients home — on top of whatever software your clinic already runs. We set it up and run it for you. You watch the bookings land.</p>
+      <p class="lead rv">Polaris answers the calls your desk can't get to, chases the confirmations that stop no-shows, and quietly brings lapsed patients home — sitting on top of whatever software your clinic already runs. We set it up and run it for you. You just watch the chairs fill.</p>
       <div class="cta-row rv">
-        <a class="btn" href="contact.html">Enquire now →</a>
-        <span class="note">15 minutes · see it on your clinic's name</span>
+        <a class="btn" href="contact.html">Enquire now <span class="arw">→</span></a>
+        <span class="aside">15 minutes · on your clinic's name</span>
       </div>
     </div>
   </section>
 
-  <section class="vid">
+  <section class="stage">
     <div class="wrap">
-      <figure class="rv">
+      <figure class="player rv">
         <video controls playsinline preload="metadata" poster="polaris/p-video-poster.webp" width="1280" height="720">
           <source src="polaris/polaris-demo-inr.webm" type="video/webm">
           Your browser can't play this clip — enquire below and we'll show you live.
         </video>
-        <figcaption><i>▶</i> Watch it catch a missed call — scripted simulation · sample data · ~30 seconds</figcaption>
+        <figcaption><i>▶</i> A missed call, caught — scripted simulation · sample data</figcaption>
       </figure>
     </div>
   </section>
 
-  <section class="light pad">
+  <section class="route-sec">
     <div class="wrap">
-      <span class="k rv">What it does</span>
-      <h2 class="rv">All day, without being asked.</h2>
-      <p class="sub rv">Every practice loses patients in the same five gaps. Polaris sits in each one.</p>
-      <ul class="jobs">
-        <li class="rv"><span class="tick">✓</span><span><b>Answers the missed call.</b> The phone rings out at lunch — the caller gets a message back within seconds, with a link to book. The patient who would have dialled the next clinic stays yours.</span></li>
-        <li class="rv"><span class="tick">✓</span><span><b>Chases confirmations.</b> Booked patients get a friendly reminder chain — days before, the day before, hours before — and a reply confirms them. Your team sees at a glance who's solid and who needs a call.</span></li>
-        <li class="rv"><span class="tick">✓</span><span><b>Wins back no-shows.</b> Anyone who misses gets a same-day "life happens — want a new time?" message, then a gentle follow-up. Most rebook themselves.</span></li>
-        <li class="rv"><span class="tick">✓</span><span><b>Brings lapsed patients home.</b> Patients overdue for a visit get a polite nudge with a booking link — the quiet revenue sitting in every practice's records.</span></li>
-        <li class="rv"><span class="tick">✓</span><span><b>Asks for the review.</b> After a good visit, one honest request for a Google review. No filtering, no gating — just asked at the right moment, every time.</span></li>
-      </ul>
+      <div class="route-head rv">
+        <h2>Every patient takes a <span class="amber">route</span>.<br>Polaris walks every step of it.</h2>
+        <p>From a first ring to a five-star review, a patient passes through five moments where practices quietly lose them. Here's where Polaris stands in each one.</p>
+      </div>
+
+      <div class="route">
+        <div class="stop l rv">
+          <div class="node"><span>1</span></div>
+          <div class="body"><span class="when">The call rings out</span><h3>It answers before they hang up.</h3><p>Your desk is with a patient. Polaris texts the caller back within seconds — with a link to book. The one who'd have dialled the next clinic stays yours.</p></div>
+        </div>
+        <div class="leg" data-dir="lr" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M170 6 C 170 90, 630 34, 630 116"></path><path class="head d" d="M630 116 l -9 -12 l 18 0 Z"></path><path class="m" d="M60 2 C 60 48, 26 74, 60 118"></path><path class="head m" d="M60 118 l -8 -11 l 16 0 Z"></path></svg></div>
+
+        <div class="stop r rv">
+          <div class="node"><span>2</span></div>
+          <div class="body"><span class="when">The day approaches</span><h3>It chases the confirmation.</h3><p>A friendly reminder chain — days before, the day before, hours before — and a reply confirms them. Your team sees at a glance who's solid and who needs a nudge.</p></div>
+        </div>
+        <div class="leg" data-dir="rl" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M630 6 C 630 90, 170 34, 170 116"></path><path class="head d" d="M170 116 l -9 -12 l 18 0 Z"></path><path class="m" d="M60 2 C 60 48, 26 74, 60 118"></path><path class="head m" d="M60 118 l -8 -11 l 16 0 Z"></path></svg></div>
+
+        <div class="stop l rv">
+          <div class="node"><span>3</span></div>
+          <div class="body"><span class="when">Someone slips through</span><h3>It wins the no-show back.</h3><p>Anyone who misses gets a same-day "life happens — want a new time?" message, then a gentle follow-up. Most rebook themselves, that day.</p></div>
+        </div>
+        <div class="leg" data-dir="lr" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M170 6 C 170 90, 630 34, 630 116"></path><path class="head d" d="M630 116 l -9 -12 l 18 0 Z"></path><path class="m" d="M60 2 C 60 48, 26 74, 60 118"></path><path class="head m" d="M60 118 l -8 -11 l 16 0 Z"></path></svg></div>
+
+        <div class="stop r rv">
+          <div class="node"><span>4</span></div>
+          <div class="body"><span class="when">A patient drifts away</span><h3>It brings them home.</h3><p>Patients overdue for a visit get a warm nudge with a booking link — the quiet revenue sitting in every practice's records, reactivated on autopilot.</p></div>
+        </div>
+        <div class="leg" data-dir="rl" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M630 6 C 630 90, 170 34, 170 116"></path><path class="head d" d="M170 116 l -9 -12 l 18 0 Z"></path><path class="m" d="M60 2 C 60 48, 26 74, 60 118"></path><path class="head m" d="M60 118 l -8 -11 l 16 0 Z"></path></svg></div>
+
+        <div class="stop l rv">
+          <div class="node"><span>5</span></div>
+          <div class="body"><span class="when">The visit goes well</span><h3>It asks for the review.</h3><p>One honest request for a Google review, at the right moment, every time. No filtering, no gating — just asked, so your reputation compounds.</p></div>
+        </div>
+      </div>
+
+      <div class="route-foot rv">
+        <svg viewBox="0 0 48 48" width="30" height="30" aria-hidden="true"><path fill="#ED9B40" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
+        <p>Five moments your desk can't always reach. Polaris reaches all of them.</p>
+      </div>
     </div>
   </section>
 
-  <section class="light pad" style="padding-top:0">
+  <section class="screens">
     <div class="wrap">
-      <span class="k rv">The screens</span>
-      <h2 class="rv">What it looks like to run.</h2>
-      <p class="sub rv">One calm screen for your team: every conversation, every booking, every automation — visible and auditable. Sample patients shown; we'll walk you through the real thing live.</p>
-      <figure class="shot rv"><img src="polaris/p-automations.webp" alt="Polaris automations list — reminder, recall and review workflows, each showing how many patients are enrolled" loading="lazy" width="1600" height="941"><figcaption>The automations that run the desk — sample data</figcaption></figure>
-      <figure class="shot rv"><img src="polaris/p-builder.webp" alt="Inside one automation: a missed call triggers an instant reply, waits for the patient, then books or alerts the desk" loading="lazy" width="1600" height="941"><figcaption>Inside the missed-call workflow — every step visible, every run logged</figcaption></figure>
-      <figure class="shot rv"><img src="polaris/p-calendar.webp" alt="The clinic week view with colour-coded appointments per clinician and clear confirmed and no-show statuses" loading="lazy" width="1600" height="941"><figcaption>The week, always current — sample data</figcaption></figure>
+      <div class="intro rv">
+        <h2>What it looks like to run.</h2>
+        <p>One calm screen for your team: every conversation, every booking, every automation — visible and auditable. These are sample patients; we'll walk you through the real thing, live.</p>
+      </div>
+      <div class="shot-grid">
+        <figure class="shot wide rv"><img src="polaris/p-builder.webp" alt="Inside the missed-call workflow: a call with no answer triggers an instant reply, waits for the patient, then books the slot or alerts the front desk" width="1600" height="941" fetchpriority="high"><figcaption>Inside one automation — every step visible, every run logged</figcaption></figure>
+        <figure class="shot rv"><img src="polaris/p-automations.webp" alt="The Polaris automations list showing reminder, recall and review workflows, each with how many patients are currently enrolled" width="1600" height="941" loading="lazy"><figcaption>The six automations that run the desk</figcaption></figure>
+        <figure class="shot rv"><img src="polaris/p-calendar.webp" alt="The clinic's week at a glance, colour-coded per clinician with clear confirmed and no-show statuses on each appointment" width="1600" height="941" loading="lazy"><figcaption>The week, always current</figcaption></figure>
+      </div>
     </div>
   </section>
 
-  <section class="honest pad">
+  <section class="honest">
     <div class="wrap">
-      <span class="k rv">Honest by design</span>
-      <h2 class="rv">No tricks in the machinery.</h2>
-      <ul class="jobs">
-        <li class="rv"><span class="tick">1</span><span><b>It works with your practice software, not instead of it.</b> Polaris requests the slot; your desk confirms it. We don't touch your clinical records, and we won't pretend to.</span></li>
-        <li class="rv"><span class="tick">2</span><span><b>Text-first, human-backed.</b> Messages are instant and clearly from your clinic — nothing robotic answers your phone pretending to be a person, and anything urgent routes straight to your team.</span></li>
-        <li class="rv"><span class="tick">3</span><span><b>Everything on this page is a sample.</b> The video and screens show fictional patients, clearly labelled. When yours is live, the numbers will be yours.</span></li>
-      </ul>
+      <h2 class="rv">No tricks in the <span class="amber">machinery</span>.</h2>
+      <div class="grid">
+        <div class="pledge rv"><h4>It works with your software, not instead of it.</h4><p>Polaris requests the slot; <b>your desk confirms it</b>. We don't touch your clinical records, and we won't pretend to.</p></div>
+        <div class="pledge rv"><h4>Text-first, human-backed.</h4><p>Messages are instant and clearly from your clinic. <b>Nothing robotic answers your phone</b> pretending to be a person — anything urgent routes straight to your team.</p></div>
+        <div class="pledge rv"><h4>Everything here is a sample.</h4><p>The video and screens show <b>fictional patients</b>, clearly labelled. When yours is live, the numbers will be your own.</p></div>
+      </div>
     </div>
   </section>
 
-  <section class="offer pad">
+  <section class="offer">
+    <svg class="stamp" viewBox="0 0 48 48" aria-hidden="true"><path fill="#14171D" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
     <div class="wrap">
-      <span class="k rv">Founding practices</span>
       <h2 class="rv">See it running on your clinic's name.</h2>
-      <p class="sub rv">We're taking three founding practices: setup waived and the first month free, month to month after — you cancel by doing nothing — in exchange for an honest written case study, good or bad. That's how a new service earns its proof without inventing it.</p>
+      <p class="sub rv">We're taking three founding practices: setup waived and the first month free, month to month after — you cancel by doing nothing — in exchange for one honest written case study, good or bad. That's how a new service earns its proof without inventing it.</p>
       <div class="cta-row rv">
-        <a class="btn dark" href="contact.html">Enquire now →</a>
-        <span class="note">15 minutes · no obligation</span>
+        <a class="btn ink" href="contact.html">Enquire now <span class="arw">→</span></a>
+        <span class="aside">15 minutes · no obligation</span>
       </div>
     </div>
   </section>
@@ -222,7 +310,7 @@ h2{font-family:var(--fd);font-weight:800;font-size:clamp(1.8rem,4.4vw,2.9rem);le
   <div class="wrap">
     <a class="mark" href="index.html" aria-label="Stellar Haus Media — home">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ED9B40" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
-      <span><b>POLARIS</b></span>
+      <span class="wm"><b>POLARIS</b></span>
     </a>
     <p>Built and run by <a href="index.html">Stellar Haus Media</a> · <a href="contact.html">Enquire now</a></p>
     <span class="fine">Demo content uses sample data · © 2026 Stellar Haus Media</span>
@@ -232,12 +320,38 @@ h2{font-family:var(--fd);font-weight:800;font-size:clamp(1.8rem,4.4vw,2.9rem);le
 <script>
 (function () {
   "use strict";
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return; /* no motion — everything already visible */
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) return; /* connectors + content already fully visible; skip motion entirely */
   document.documentElement.classList.add("anim");
+  /* prime every connector stroke (desktop + mobile variant) as an undrawn dashed line */
+  [].slice.call(document.querySelectorAll(".leg path")).forEach(function (p) {
+    if (p.classList.contains("head")) return;
+    try { var L = Math.ceil(p.getTotalLength()); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; } catch (e) {}
+  });
+  var els = [].slice.call(document.querySelectorAll(".rv, .leg"));
+  function reveal(el) {
+    el.classList.add("in");
+    if (el.classList.contains("leg")) {
+      [].slice.call(el.querySelectorAll("path")).forEach(function (p) {
+        if (!p.classList.contains("head")) p.style.strokeDashoffset = "0"; /* draw the route */
+      });
+    }
+  }
+  if (!("IntersectionObserver" in window)) { els.forEach(reveal); return; }
   var io = new IntersectionObserver(function (es) {
-    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  document.querySelectorAll(".rv").forEach(function (el) { io.observe(el); });
+    es.forEach(function (e) { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
+  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+  els.forEach(function (el) { io.observe(el); });
+  /* safety net: anything already in view (or if the observer is starved) reveals on load */
+  function sweep() {
+    els.forEach(function (el) {
+      if (el.classList.contains("in")) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < innerHeight * 0.96) reveal(el);
+    });
+  }
+  addEventListener("load", sweep);
+  setTimeout(sweep, 1200);
 })();
 </script>
 </body>
