@@ -176,6 +176,11 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
 .offer .wrap{position:relative}
 .offer h2{max-width:15ch}
 .offer .sub{font-size:clamp(1.06rem,1.9vw,1.28rem);line-height:1.55;color:#5A3B0E;max-width:58ch;margin-top:16px;text-wrap:pretty}
+.offer .terms{list-style:none;display:flex;flex-wrap:wrap;gap:12px 30px;margin-top:26px;padding-top:22px;border-top:1px solid rgba(20,23,29,.22)}
+.offer .terms li{display:inline-flex;align-items:center;gap:10px;font-size:1.04rem;color:#3E2908;font-weight:500}
+.offer .terms li::before{content:"";width:20px;height:20px;flex:none;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='12' fill='%2314171D'/><path d='M17 8.5 L10.5 15.5 L7 12' fill='none' stroke='%23ED9B40' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat}
+.offer .terms b{color:#14171D;font-weight:700}
 .offer .cta-row{margin-top:32px}
 .offer .aside{color:#7A5417}
 
@@ -302,8 +307,13 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
   <section class="offer">
     <svg class="stamp" viewBox="0 0 48 48" aria-hidden="true"><path fill="#14171D" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
     <div class="wrap">
-      <h2 class="rv">See it running on your clinic's name.</h2>
-      <p class="sub rv">We're taking three founding practices: setup waived and the first month free, month to month after — you cancel by doing nothing — in exchange for one honest written case study, good or bad. That's how a new service earns its proof without inventing it.</p>
+      <h2 class="rv">We build it. We run it. You fill chairs.</h2>
+      <p class="sub rv">The whole system — missed-call recovery, reminders, recall, reviews — set up on top of the software you already use, and managed for you end to end. Nothing for your team to learn, nothing to babysit. You watch the bookings land.</p>
+      <ul class="terms rv">
+        <li><b>Your first month is free.</b></li>
+        <li>One simple monthly fee — no setup cost.</li>
+        <li>Month to month. Cancel anytime.</li>
+      </ul>
       <div class="cta-row rv">
         <a class="btn ink" href="contact.html">Enquire now <span class="arw">→</span></a>
         <span class="aside">15 minutes · no obligation</span>
