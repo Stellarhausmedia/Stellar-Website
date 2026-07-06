@@ -461,6 +461,83 @@
     });
   }
 
+  /* the footer film, resolved generatively (owner pick 2026-07-05: BOTH looks, split by theme):
+     a woven fabric of tiny North Star glyphs breathes beneath the WHOLE footer — mint fabric
+     with ink glyphs in light mode, a quiet ink weave with a cursor-woken mint gleam in dark.
+     A strict, clearly visible grid at rest: it must read as FABRIC, never as the banned starfield.
+     Zero assets, IO-gated (runs only while the footer is on screen), pointer-lean on fine pointers
+     only, one static frame under reduced motion. */
+  (function () {
+    var foot = document.querySelector("footer.foot");
+    if (!foot || !window.CanvasRenderingContext2D) return;
+    var cv = document.createElement("canvas");
+    cv.className = "floop"; cv.setAttribute("aria-hidden", "true");
+    foot.insertBefore(cv, foot.firstChild);
+    var fctx = cv.getContext("2d");
+    var COARSE2 = matchMedia("(pointer:coarse)").matches;
+    var DPR2 = Math.min(2, devicePixelRatio || 1);
+    var GAP2 = COARSE2 ? 62 : 46, fW = 0, fH = 0, pts = [], ft = 0, fRun = false, fRaf = 0;
+    var fmx = -9e3, fmy = -9e3;
+    window.__flFrames = 0; /* verification hook */
+    function fSize() {
+      var r = foot.getBoundingClientRect();
+      fW = r.width; fH = r.height;
+      cv.width = fW * DPR2; cv.height = fH * DPR2;
+      fctx.setTransform(DPR2, 0, 0, DPR2, 0, 0);
+      pts = [];
+      var cols = Math.ceil(fW / GAP2) + 1, rows = Math.ceil(fH / GAP2) + 1;
+      for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++)
+        pts.push({ x: x * GAP2 + (y % 2 ? GAP2 / 2 : 0), y: y * GAP2 + GAP2 / 2 });
+    }
+    function fGlyph(s) {
+      fctx.beginPath();
+      fctx.moveTo(0, -s); fctx.quadraticCurveTo(0, 0, s, 0); fctx.quadraticCurveTo(0, 0, 0, s);
+      fctx.quadraticCurveTo(0, 0, -s, 0); fctx.quadraticCurveTo(0, 0, 0, -s);
+      fctx.closePath();
+    }
+    function fFrame(step) {
+      var light = root.classList.contains("light");
+      var rest = light ? "rgba(8,11,20," : "rgba(234,238,247,";
+      var near = light ? "rgba(8,11,20," : "rgba(95,227,198,";
+      var restA = light ? 0.15 : 0.09, crestA = light ? 0.4 : 0.13;
+      fctx.clearRect(0, 0, fW, fH);
+      for (var i = 0; i < pts.length; i++) {
+        var p = pts[i];
+        var lift = Math.pow(Math.max(0, Math.cos((p.x + p.y) * 0.012 - ft)), 3);
+        var dx = fmx - p.x, dy = fmy - p.y, d2 = dx * dx + dy * dy;
+        var nf = d2 < 22500 ? 1 - Math.sqrt(d2) / 150 : 0;
+        var s = 3.6 + lift * 5.5 + nf * 6;
+        var a = Math.min(0.85, restA + lift * crestA + nf * 0.45);
+        fctx.save(); fctx.translate(p.x, p.y);
+        if (nf > 0) fctx.rotate(Math.atan2(dy, dx) + lift * 0.3);
+        else if (lift > 0.01) fctx.rotate(lift * 0.5);
+        fctx.fillStyle = (nf > 0.05 ? near : rest) + a.toFixed(3) + ")";
+        fGlyph(s); fctx.fill(); fctx.restore();
+      }
+      if (step !== false) { ft += 0.016; window.__flFrames++; }
+    }
+    function fLoop() { if (!fRun) return; fFrame(); fRaf = requestAnimationFrame(fLoop); }
+    fSize();
+    if (RM) { ft = 1.2; fFrame(false); }
+    else {
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (en) {
+          var vis = en[0].isIntersecting;
+          if (vis && !fRun) { fRun = true; fLoop(); }
+          if (!vis && fRun) { fRun = false; cancelAnimationFrame(fRaf); }
+        }).observe(cv);
+      } else { fRun = true; fLoop(); }
+      if (!COARSE2) {
+        foot.addEventListener("mousemove", function (e) {
+          var r = foot.getBoundingClientRect(); fmx = e.clientX - r.left; fmy = e.clientY - r.top;
+        });
+        foot.addEventListener("mouseleave", function () { fmx = fmy = -9e3; });
+      }
+    }
+    addEventListener("resize", function () { fSize(); if (RM) fFrame(false); });
+    themeHooks.push(function () { if (RM) fFrame(false); }); /* live frames read the theme themselves */
+  })();
+
   /* contact chooser: the three send buttons carry a ready-made message composed live from the
      form fields (owner-requested; wording tweakable). Also records which page sent the lead. */
   (function () {
@@ -916,6 +993,23 @@
       sec.appendChild(stage);
       trays[0].sl.classList.add("on");
       var target = 0, p = 0, H = stage.offsetHeight || innerHeight, focusIdx = -1, lastT = -1, lastMove = 0, settled = true, wheelLock = 0;
+      /* Robin Noguier colour progression: the PAGE behind the deck follows the active card —
+         each service card gets a counter-palette field (deep shades in dark, mid tints in light).
+         The morph engine asks this section for its live colour via __dynCol (see colOf), so the
+         blend into the neighbouring sections stays seamless at both ends. Order = svc0..svc4. */
+      var TINT_DEEP = [[13, 41, 33], [42, 33, 12], [46, 18, 11], [19, 26, 56], [43, 22, 16]];   /* deep mint / gold / rose / periwinkle / salmon */
+      var TINT_LITE = [[150, 222, 199], [242, 220, 164], [243, 191, 174], [194, 207, 233], [229, 151, 127]]; /* the light world's mid-tone fields */
+      sec.__dynCol = function () {
+        var lightM = root.classList.contains("light");
+        var L = lightM ? TINT_LITE : TINT_DEEP;
+        var base = lightM ? [240, 183, 166] : [8, 11, 20]; /* this section's own theme colour (s-ink ↔ s-lt) */
+        var q = Math.max(0, Math.min(T - 1, p));
+        if (q <= 0) return base;
+        var lo = q < 1 ? base : L[Math.min(L.length - 1, Math.floor(q) - 1)];
+        var hi = L[Math.min(L.length - 1, Math.ceil(q) - 1)];
+        var f = q % 1; if (f === 0) return hi;
+        return [lo[0] + (hi[0] - lo[0]) * f, lo[1] + (hi[1] - lo[1]) * f, lo[2] + (hi[2] - lo[2]) * f];
+      };
       var fingerDown = false; /* the settle-snap must never tug the page while a thumb is on the glass.
          touch events, not pointer events: pointercancel fires at pan start while the finger is still down */
       addEventListener("touchstart", function () { fingerDown = true; }, { passive: true });
@@ -956,6 +1050,7 @@
              a covered card stays put, drifting up a touch and shrinking beneath the new one */
           var ty = d < 0 ? (-d * H) : (-d * H * 0.045);
           e.sl.style.transform = "translateY(" + ty.toFixed(1) + "px)";
+          if (!e.card) e.sl.style.opacity = Math.max(0, 1 - Math.max(0, d)).toFixed(3); /* the intro is bare TEXT — covered cards may peek above the pile, but drifting text must fade away under card 1, not float over it */
           if (e.card) {
             var sc = d > 0 ? Math.max(0.9, 1 - d * 0.04) : 1;
             var rf = Math.max(0, 1 - Math.abs(d)); /* only the card in motion tilts */
@@ -1247,7 +1342,10 @@
       bgl.style.background = "rgb(" + panels[0].c.join(",") + ")";
       function lerp(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
       var last = "", footEl = document.querySelector("footer.foot"), lastReveal = -1;
-      function colOf(p) { for (var k in CM) { if (p.el.classList.contains(k)) return CM[k]; } return p.c; } /* classes are theme-remapped live */
+      function colOf(p) {
+        if (p.el.__dynCol) { var dyn = p.el.__dynCol(); if (dyn) return dyn; } /* the services deck follows its active card */
+        for (var k in CM) { if (p.el.classList.contains(k)) return CM[k]; } return p.c; /* classes are theme-remapped live */
+      }
       /* REFOKUS footer reveal: the last section becomes an opaque sheet (its own morph colour,
          forced over the transparent-section rule); the footer is pulled up UNDERNEATH it by a
          negative margin, so scrolling slides the sheet up and off to uncover the stationary

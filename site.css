@@ -373,7 +373,7 @@ html.light .m-nav a:hover,html.light .m-nav a:focus-visible,html.light .m-nav a[
 html.light .m-nav a[aria-current]::before{color:var(--rose-ink)}
 html.light .m-signoff{color:#6E3B30}
 html.light .scrim{background:rgba(10,15,28,.3)}
-html.light.morph footer.foot{background:var(--lt)!important}
+html.light.morph footer.foot{background:var(--mint)!important} /* light footer = the MINT FABRIC world (owner pick 2026-07-05); dark keeps the ink weave */
 html.light .rv-curtain i{background:linear-gradient(to bottom,rgba(141,46,26,0),var(--rose-ink))}
 html.light .foot .huge .g{color:var(--rose-ink)}
 html.light .foot-links a:hover{color:var(--rose-ink)}
@@ -451,7 +451,7 @@ html.js:not(.rm) .svcshow.ss-on .work{position:absolute;width:1px;height:1px;mar
 .ss-card .nm:hover~.go,.ss-card .go:hover{background:var(--mint);color:var(--ink);border-color:var(--mint);transform:rotate(-45deg)}
 .ss-card .shade{position:absolute;inset:0;background:var(--ink);opacity:0;pointer-events:none} /* dims a card as the next one covers it */
 /* colored service cards — each panel a brand colour with ink text; wins over the dark/light .ss-card bg */
-.ss-card.svc0{background:var(--cat-edu)}.ss-card.svc1{background:var(--cat-trust)}.ss-card.svc2{background:var(--cat-proof)}.ss-card.svc3{background:var(--cat-promo)}.ss-card.svc4{background:var(--mint)}
+.ss-card.svc0{background:var(--cat-edu)}.ss-card.svc1{background:var(--cat-trust)}.ss-card.svc2{background:var(--cat-proof)}.ss-card.svc3{background:var(--cat-promo)}.ss-card.svc4{background:var(--lt)} /* five DISTINCT colours — the 5th card is salmon, not a mint repeat, so the page-behind flow never doubles back */
 .ss-card[class*="svc"]{border-color:transparent;box-shadow:0 -18px 60px rgba(0,0,0,.4)}
 .ss-card[class*="svc"] .num{color:#080B14;opacity:.16}
 .ss-card[class*="svc"] .nm,.ss-card[class*="svc"] .go{color:#080B14}
@@ -932,3 +932,10 @@ body.pt-out main,body.pt-out header,body.pt-out footer{opacity:0;transition:opac
  the star anchors left instead of overlapping the language pill */
  .brand{position:static;top:auto;left:auto;transform:none;margin-right:auto}
 }
+
+/* ---------------- footer film (canvas injected by app.js) ---------------- */
+.floop{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.foot > :not(.floop){position:relative;z-index:1} /* footer content rides above the fabric */
+html.light .foot{background:var(--mint)} /* holds for reduced-motion / no-morph paths too */
+.fcta{box-shadow:0 20px 55px -18px rgba(95,227,198,.45)} /* stamp spotlight: it pops off the fabric at rest, not only on hover */
+html.light .fcta{box-shadow:0 20px 55px -18px rgba(141,46,26,.5)}
