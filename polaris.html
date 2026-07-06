@@ -122,17 +122,23 @@ h1 em{font-style:normal;color:var(--amber)}
 .stop .body p{color:var(--mut-l);font-size:1rem;margin-top:7px;max-width:42ch}
 .stop.r{margin-left:auto;justify-items:start}
 .leg{display:block;width:100%;height:clamp(76px,10vw,116px);overflow:visible;position:relative}
-.leg svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.leg>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .leg path{fill:none;stroke:var(--amber);stroke-width:2.4;stroke-linecap:round}
-.leg .head{fill:var(--amber);stroke:none}
 .leg .m{display:none}
+/* arrowhead is its OWN undistorted svg, pinned to the curve's exact end (fixed %-of-viewBox) */
+.leg .tip{position:absolute;top:97%;transform:translate(-50%,-50%);width:15px;height:13px;color:var(--amber);pointer-events:none;line-height:0}
+.leg .tip>svg{position:static;width:15px;height:13px;display:block}
+.leg .tip path{fill:currentColor;stroke:none}
+.leg.lr .tip{left:78.75%}
+.leg.rl .tip{left:21.25%}
 html.anim .leg path{transition:stroke-dashoffset 1.05s var(--ease)}
-html.anim .leg .head{opacity:0;transition:opacity .3s ease .85s}
-html.anim .leg.in .head{opacity:1}
+html.anim .leg .tip{opacity:0}
+html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
 @media (max-width:760px){
   .leg{height:clamp(64px,14vw,88px)}
   .leg .d{display:none}
   .leg .m{display:inline}
+  .leg .tip{left:7.5%!important;top:98%}
   .stop{max-width:none}
 }
 .route-foot{margin-top:clamp(36px,5vw,56px);display:flex;align-items:center;gap:16px;flex-wrap:wrap;
@@ -235,25 +241,25 @@ html.anim .leg.in .head{opacity:1}
           <div class="node"><span>1</span></div>
           <div class="body"><span class="when">The call rings out</span><h3>It answers before they hang up.</h3><p>Your desk is with a patient. Polaris texts the caller back within seconds — with a link to book. The one who'd have dialled the next clinic stays yours.</p></div>
         </div>
-        <div class="leg" data-dir="lr" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M170 6 C 170 90, 630 34, 630 116"></path><path class="head d" d="M630 116 l -9 -12 l 18 0 Z"></path><path class="m" d="M60 2 C 60 48, 26 74, 60 118"></path><path class="head m" d="M60 118 l -8 -11 l 16 0 Z"></path></svg></div>
+        <div class="leg lr" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M170 6 C 170 90, 630 34, 630 116"></path><path class="m" d="M60 2 C 24 44, 60 82, 60 118"></path></svg><span class="tip"><svg viewBox="0 0 15 13"><path d="M7.5 13 L0 0 L15 0 Z"/></svg></span></div>
 
         <div class="stop r rv">
           <div class="node"><span>2</span></div>
           <div class="body"><span class="when">The day approaches</span><h3>It chases the confirmation.</h3><p>A friendly reminder chain — days before, the day before, hours before — and a reply confirms them. Your team sees at a glance who's solid and who needs a nudge.</p></div>
         </div>
-        <div class="leg" data-dir="rl" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M630 6 C 630 90, 170 34, 170 116"></path><path class="head d" d="M170 116 l -9 -12 l 18 0 Z"></path><path class="m" d="M60 2 C 60 48, 26 74, 60 118"></path><path class="head m" d="M60 118 l -8 -11 l 16 0 Z"></path></svg></div>
+        <div class="leg rl" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M630 6 C 630 90, 170 34, 170 116"></path><path class="m" d="M60 2 C 24 44, 60 82, 60 118"></path></svg><span class="tip"><svg viewBox="0 0 15 13"><path d="M7.5 13 L0 0 L15 0 Z"/></svg></span></div>
 
         <div class="stop l rv">
           <div class="node"><span>3</span></div>
           <div class="body"><span class="when">Someone slips through</span><h3>It wins the no-show back.</h3><p>Anyone who misses gets a same-day "life happens — want a new time?" message, then a gentle follow-up. Most rebook themselves, that day.</p></div>
         </div>
-        <div class="leg" data-dir="lr" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M170 6 C 170 90, 630 34, 630 116"></path><path class="head d" d="M630 116 l -9 -12 l 18 0 Z"></path><path class="m" d="M60 2 C 60 48, 26 74, 60 118"></path><path class="head m" d="M60 118 l -8 -11 l 16 0 Z"></path></svg></div>
+        <div class="leg lr" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M170 6 C 170 90, 630 34, 630 116"></path><path class="m" d="M60 2 C 24 44, 60 82, 60 118"></path></svg><span class="tip"><svg viewBox="0 0 15 13"><path d="M7.5 13 L0 0 L15 0 Z"/></svg></span></div>
 
         <div class="stop r rv">
           <div class="node"><span>4</span></div>
           <div class="body"><span class="when">A patient drifts away</span><h3>It brings them home.</h3><p>Patients overdue for a visit get a warm nudge with a booking link — the quiet revenue sitting in every practice's records, reactivated on autopilot.</p></div>
         </div>
-        <div class="leg" data-dir="rl" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M630 6 C 630 90, 170 34, 170 116"></path><path class="head d" d="M170 116 l -9 -12 l 18 0 Z"></path><path class="m" d="M60 2 C 60 48, 26 74, 60 118"></path><path class="head m" d="M60 118 l -8 -11 l 16 0 Z"></path></svg></div>
+        <div class="leg rl" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M630 6 C 630 90, 170 34, 170 116"></path><path class="m" d="M60 2 C 24 44, 60 82, 60 118"></path></svg><span class="tip"><svg viewBox="0 0 15 13"><path d="M7.5 13 L0 0 L15 0 Z"/></svg></span></div>
 
         <div class="stop l rv">
           <div class="node"><span>5</span></div>
@@ -323,18 +329,16 @@ html.anim .leg.in .head{opacity:1}
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce) return; /* connectors + content already fully visible; skip motion entirely */
   document.documentElement.classList.add("anim");
-  /* prime every connector stroke (desktop + mobile variant) as an undrawn dashed line */
-  [].slice.call(document.querySelectorAll(".leg path")).forEach(function (p) {
-    if (p.classList.contains("head")) return;
+  /* prime every connector stroke (desktop + mobile variant) as an undrawn dashed line;
+     the .d/.m classes scope this to the route curves only — never the arrowhead tip */
+  [].slice.call(document.querySelectorAll(".leg path.d, .leg path.m")).forEach(function (p) {
     try { var L = Math.ceil(p.getTotalLength()); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; } catch (e) {}
   });
   var els = [].slice.call(document.querySelectorAll(".rv, .leg"));
   function reveal(el) {
     el.classList.add("in");
     if (el.classList.contains("leg")) {
-      [].slice.call(el.querySelectorAll("path")).forEach(function (p) {
-        if (!p.classList.contains("head")) p.style.strokeDashoffset = "0"; /* draw the route */
-      });
+      [].slice.call(el.querySelectorAll("path.d, path.m")).forEach(function (p) { p.style.strokeDashoffset = "0"; });
     }
   }
   if (!("IntersectionObserver" in window)) { els.forEach(reveal); return; }

@@ -136,6 +136,21 @@ html:not(.rm) .brand:hover svg{transform:rotate(90deg) scale(1.08);filter:drop-s
 .m-nav a:hover::after,.m-nav a:focus-visible::after{opacity:1;transform:none} /* index number stays muted on hover — label + arrow lead the eye */
 .m-nav a[aria-current]{color:var(--mint)}
 .m-nav a[aria-current]::before{color:var(--mint)}
+/* Polaris = a standalone product: wears its OWN identity in the menu (amber + mono wordmark
+   + its needle mark) so it reads as separate from the Stellar Haus pages around it */
+.m-nav a.m-polaris{counter-increment:none;font-family:var(--fm);text-transform:uppercase;letter-spacing:.22em;font-weight:700;font-size:clamp(.98rem,3.4vw,1.16rem);color:#ED9B40}
+.m-nav a.m-polaris::before{content:"";width:.95em;height:.95em;flex:none;align-self:center;transform:none;background:#ED9B40;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z'/></svg>") center/contain no-repeat;
+  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path d='M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z'/></svg>") center/contain no-repeat}
+.m-nav a.m-polaris::after{color:#ED9B40}
+.m-nav a.m-polaris:hover,.m-nav a.m-polaris:focus-visible{color:#F3B061;padding-left:.5rem}
+.m-nav a.m-polaris:hover::after,.m-nav a.m-polaris:focus-visible::after{opacity:1;transform:none}
+/* light drawer is warm/salmon — bright amber loses contrast, so drop to a deep amber that
+   still reads as Polaris's own warm identity, distinct from the ink-black site links */
+html.light .m-nav a.m-polaris{color:#8A4E10}
+html.light .m-nav a.m-polaris::before{background:#8A4E10}
+html.light .m-nav a.m-polaris::after{color:#8A4E10}
+html.light .m-nav a.m-polaris:hover,html.light .m-nav a.m-polaris:focus-visible{color:#A55E14}
 .mobile .btn{margin-top:1.4rem;justify-content:center;border-bottom:0;font-size:1rem;padding:.9rem 1.3rem}
 .m-signoff{margin:1.3rem 0 0;font-family:var(--fm);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-soft)}
 /* menu opens with a staggered editorial cascade — reduced motion shows it instantly */
@@ -149,7 +164,8 @@ html:not(.rm) .mobile.open .m-nav a:nth-of-type(5){animation-delay:.21s}
 html:not(.rm) .mobile.open .m-nav a:nth-of-type(6){animation-delay:.25s}
 html:not(.rm) .mobile.open .m-nav a:nth-of-type(7){animation-delay:.29s}
 html:not(.rm) .mobile.open .m-nav a:nth-of-type(8){animation-delay:.33s}
-html:not(.rm) .mobile.open .m-signoff{animation-delay:.42s}
+html:not(.rm) .mobile.open .m-nav a:nth-of-type(9){animation-delay:.37s}
+html:not(.rm) .mobile.open .m-signoff{animation-delay:.46s}
 @keyframes mIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes mFade{from{opacity:0}to{opacity:1}}
 /* no-JS: the drawer can't be opened, so render it inline as a plain nav fallback */
