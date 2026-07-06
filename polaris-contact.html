@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enquire — Polaris</title>
+<meta name="description" content="Tell us about your clinic. A few questions, two minutes — and we'll come back to you within one working day with how Polaris would run on your front desk.">
+<meta property="og:title" content="Enquire — Polaris">
+<meta property="og:description" content="A few questions, two minutes — we'll come back to you within one working day.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stellarhausmedia.com/polaris-contact">
+<meta property="og:image" content="https://stellarhausmedia.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://stellarhausmedia.com/polaris-contact">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="polaris/favicon.svg" type="image/svg+xml">
+<style>
+/* ============================================================================
+   POLARIS — enquiry page. Same standalone identity as polaris.html (true
+   black + graphite + amber). Serious register: no drench, no decoration —
+   a form that respects the reader's time. No backend by design: submitting
+   opens the visitor's own email app with everything pre-filled.
+   ========================================================================== */
+@font-face{font-family:"Bricolage";src:url("fonts/bricolage-grotesque.woff2") format("woff2");font-weight:200 800;font-display:swap}
+@font-face{font-family:"Hanken";src:url("fonts/hanken-grotesk.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"JBMono";src:url("fonts/jetbrains-mono.woff2") format("woff2");font-weight:100 800;font-display:swap}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blk:#000000; --graphite:#23272F; --graphite-2:#14171D; --panel:#0C0E12;
+  --amber:#ED9B40; --amber-lo:#F0A857; --mint:#5FE3C6;
+  --tx:#EDEFF3; --mut:#98A0AC; --line:rgba(237,239,243,.14); --err:#F27B6C;
+  --fd:"Bricolage",system-ui,sans-serif; --fb:"Hanken",system-ui,Arial,sans-serif; --fm:"JBMono",ui-monospace,monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+html{background:var(--blk);-webkit-tap-highlight-color:transparent}
+body{background:var(--blk);color:var(--tx);font-family:var(--fb);font-size:clamp(15.5px,1.05vw,17px);line-height:1.62;overflow-x:clip}
+a{color:inherit}
+.wrap{max-width:760px;margin:0 auto;padding:0 clamp(20px,5vw,44px)}
+:focus-visible{outline:2.5px solid var(--amber);outline-offset:3px;border-radius:8px}
+
+/* ── header (same mark as polaris.html) ─────────────────── */
+.top{position:sticky;top:0;z-index:60;background:rgba(0,0,0,.82);backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line)}
+.top .wrap{max-width:1120px;display:flex;align-items:center;gap:14px;height:66px}
+.mark{display:inline-flex;align-items:center;gap:11px;text-decoration:none}
+.mark svg{width:26px;height:26px;filter:drop-shadow(0 0 10px rgba(237,155,64,.4))}
+.mark .wm{display:flex;flex-direction:column;line-height:1}
+.mark b{font-family:var(--fm);font-weight:600;font-size:14px;letter-spacing:.34em}
+.mark small{font-size:10px;color:var(--mut);letter-spacing:.03em;margin-top:4px}
+.mark small .shm{color:var(--mint);font-weight:600}
+.back{margin-left:auto;font-family:var(--fm);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);text-decoration:none;padding:10px 4px}
+.back:hover{color:var(--tx)}
+@media (max-width:560px){.mark small{display:none}}
+
+/* ── head block ─────────────────────────────────────────── */
+.hd{padding:clamp(48px,8vw,88px) 0 clamp(26px,4vw,40px)}
+h1{font-family:var(--fd);font-weight:800;letter-spacing:-.03em;line-height:1.03;font-size:clamp(2.2rem,5.6vw,3.6rem);text-wrap:balance}
+h1 em{font-style:normal;color:var(--amber)}
+.hd p{color:var(--mut);font-size:clamp(1.05rem,1.7vw,1.22rem);margin-top:16px;max-width:52ch;text-wrap:pretty}
+.hd p b{color:var(--tx);font-weight:600}
+
+/* ── form ───────────────────────────────────────────────── */
+form{background:var(--panel);border:1px solid var(--line);border-radius:18px;
+  padding:clamp(22px,4vw,40px);margin-bottom:clamp(56px,9vw,96px)}
+.grid2{display:grid;gap:18px}
+@media (min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
+.fld{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+.grid2 .fld{margin-bottom:0}
+.grid2{margin-bottom:18px}
+label{font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+label .req{color:var(--amber)}
+input,select,textarea{width:100%;min-height:48px;background:#000;border:1px solid var(--line);border-radius:10px;
+  color:var(--tx);font-family:var(--fb);font-size:16px;padding:12px 14px;transition:border-color .25s}
+textarea{min-height:110px;resize:vertical}
+select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' fill='none' stroke='%2398A0AC' stroke-width='2' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 14px center}
+input::placeholder,textarea::placeholder{color:#7A828E}
+input:hover,select:hover,textarea:hover{border-color:rgba(237,239,243,.28)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--amber)}
+.fld.bad input,.fld.bad select{border-color:var(--err)}
+.fld .err{display:none;color:var(--err);font-size:.85rem}
+.fld.bad .err{display:block}
+.hint{color:var(--mut);font-size:.85rem}
+.send-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+button.send{display:inline-flex;align-items:center;gap:10px;background:var(--amber);color:var(--graphite-2);border:0;cursor:pointer;
+  font-family:var(--fd);font-weight:700;font-size:15.5px;border-radius:999px;padding:14px 30px;min-height:48px;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),background .2s}
+button.send:hover{transform:translateY(-2px);box-shadow:0 16px 40px -14px rgba(237,155,64,.6);background:var(--amber-lo)}
+.send-row .aside{font-family:var(--fm);font-size:10.5px;letter-spacing:.09em;color:var(--mut);text-transform:uppercase;line-height:1.8}
+.send-row .alt-mail{color:var(--amber);text-decoration:none;border-bottom:1px solid rgba(237,155,64,.5);text-transform:none;letter-spacing:.02em}
+
+/* sent state */
+.done{display:none;background:var(--panel);border:1px solid rgba(237,155,64,.4);border-radius:18px;
+  padding:clamp(24px,4vw,40px);margin-bottom:clamp(56px,9vw,96px)}
+.done.show{display:block}
+.done h2{font-family:var(--fd);font-weight:800;letter-spacing:-.02em;font-size:clamp(1.4rem,2.8vw,1.9rem)}
+.done p{color:var(--mut);margin-top:10px;max-width:56ch}
+.done p b{color:var(--tx)}
+.done .alt{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);font-size:.95rem}
+.done .alt a{color:var(--amber);text-decoration:none;border-bottom:1px solid rgba(237,155,64,.5)}
+
+/* ── footer ─────────────────────────────────────────────── */
+.foot{padding:40px 0 34px;border-top:1px solid var(--line)}
+.foot .wrap{max-width:1120px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.foot .mark svg{width:20px;height:20px;filter:none}
+.foot .mark b{font-size:12px}
+.foot p{font-size:13.5px;color:var(--mut)}
+.foot a{color:var(--tx);text-decoration:none;border-bottom:1px solid var(--amber)}
+.foot .fine{margin-left:auto;font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+@media (max-width:720px){.foot .fine{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="polaris.html" aria-label="Polaris — back to the product page">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ED9B40" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
+      <span class="wm"><b>POLARIS</b><small>by <span class="shm">Stellar Haus Media</span></small></span>
+    </a>
+    <a class="back" href="polaris.html">&larr; Back to Polaris</a>
+  </div>
+</header>
+
+<main>
+  <section class="hd">
+    <div class="wrap">
+      <h1>Tell us about <em>your clinic</em>.</h1>
+      <p>A few questions, two minutes. We read every enquiry ourselves and <b>come back to you within one working day</b> with how Polaris would run on your front desk — no call scripts, no pressure.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <form id="ef" novalidate>
+        <div class="grid2">
+          <div class="fld" data-k="Clinic">
+            <label for="f-clinic">Clinic name <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-clinic" aria-describedby="e-clinic">
+<span class="err" id="e-clinic" role="alert">Please tell us the clinic's name.</span>
+          </div>
+          <div class="fld" data-k="Name">
+            <label for="f-name">Your name <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-name" aria-describedby="e-name">
+<span class="err" id="e-name" role="alert">Please tell us your name.</span>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="fld" data-k="Role">
+            <label for="f-role">Your role</label>
+            <select id="f-role" name="role">
+              <option>Owner / principal dentist</option>
+              <option>Practice manager</option>
+              <option>Front desk lead</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="fld" data-k="Location">
+            <label for="f-loc">Where is the clinic?</label>
+            <input id="f-loc" name="location" type="text" placeholder="City, country" autocomplete="off">
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="fld" data-k="Email">
+            <label for="f-email">Email <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-email" aria-describedby="e-email">
+<span class="err" id="e-email" role="alert">We need an email to reply to.</span>
+          </div>
+          <div class="fld" data-k="Phone">
+            <label for="f-phone">Phone / WhatsApp</label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+            <span class="hint">Optional — only if you prefer a call back.</span>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="fld" data-k="Practice size">
+            <label for="f-size">Practice size</label>
+            <select id="f-size" name="size">
+              <option>1–2 chairs</option>
+              <option>3–5 chairs</option>
+              <option>6+ chairs / multi-site</option>
+            </select>
+          </div>
+          <div class="fld" data-k="Biggest leak">
+            <label for="f-leak">Where do you lose the most patients?</label>
+            <select id="f-leak" name="leak">
+              <option>Missed calls</option>
+              <option>No-shows</option>
+              <option>Lapsed patients not coming back</option>
+              <option>Too few reviews</option>
+              <option>Not sure — that's the problem</option>
+            </select>
+          </div>
+        </div>
+        <div class="fld" data-k="Notes">
+          <label for="f-msg">Anything else we should know?</label>
+          <textarea id="f-msg" name="msg" placeholder="Current software, opening hours, what you've tried before…"></textarea>
+        </div>
+        <div class="send-row">
+          <button class="send" type="submit">Send enquiry <span aria-hidden="true">&rarr;</span></button>
+          <span class="aside">Opens ready-to-send in your email app · reply within one working day<br>Prefer email? <a class="alt-mail" href="mailto:stellarhausmedia@gmail.com">stellarhausmedia@gmail.com</a></span>
+        </div>
+      </form>
+
+      <div class="done" id="done" role="status" aria-live="polite">
+        <h2>Thank you — nearly there.</h2>
+        <p>Your email app <b>should have opened</b> with the enquiry written and addressed for you — just press send. We read every enquiry ourselves and reply within one working day.</p>
+        <p class="alt">Nothing opened? <a id="alt-link" href="mailto:stellarhausmedia@gmail.com">Open your ready-made enquiry again</a>, or email us directly at <a href="mailto:stellarhausmedia@gmail.com">stellarhausmedia@gmail.com</a>. Your answers above stay put either way.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <a class="mark" href="polaris.html" aria-label="Polaris — product page">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ED9B40" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
+      <span class="wm"><b>POLARIS</b></span>
+    </a>
+    <p>Built and run by <a href="index.html">Stellar Haus Media</a></p>
+    <span class="fine">&copy; 2026 Stellar Haus Media</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var form = document.getElementById("ef"), done = document.getElementById("done");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var bad = null;
+    [].slice.call(form.querySelectorAll(".fld")).forEach(function (f) {
+      var c = f.querySelector("input,select,textarea");
+      var invalid = c.required && (!c.value.trim() || (c.type === "email" && c.validity.typeMismatch));
+      f.classList.toggle("bad", !!invalid);
+      if (c.required) c.setAttribute("aria-invalid", invalid ? "true" : "false");
+      if (invalid && !bad) bad = c;
+    });
+    if (bad) { bad.focus(); return; }
+    var lines = [];
+    [].slice.call(form.querySelectorAll(".fld")).forEach(function (f) {
+      var c = f.querySelector("input,select,textarea");
+      if (c.value.trim()) lines.push(f.getAttribute("data-k") + ": " + c.value.trim());
+    });
+    lines.push("", "(Sent from the Polaris enquiry page)");
+    var subject = "Polaris enquiry — " + document.getElementById("f-clinic").value.trim();
+    var href = "mailto:stellarhausmedia@gmail.com?subject=" + encodeURIComponent(subject) +
+               "&body=" + encodeURIComponent(lines.join("\n"));
+    window.__mailto = href; /* test hook */
+    var alt = document.getElementById("alt-link");
+    if (alt) alt.href = href; /* the retry link carries the full composed enquiry */
+    window.location.href = href;
+    /* the form stays on screen — if no mail app opens, nothing typed is lost */
+    done.classList.add("show");
+    done.scrollIntoView({ block: "nearest" });
+  });
+})();
+</script>
+</body>
+</html>

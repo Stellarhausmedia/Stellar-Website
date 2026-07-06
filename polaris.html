@@ -4,49 +4,49 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Polaris — the front desk that never misses</title>
-<meta name="description" content="Polaris answers missed calls in seconds, chases confirmations, wins back no-shows and brings lapsed patients home — on top of whatever software your clinic already runs. Set up and run for you, month to month.">
+<meta name="description" content="Polaris catches missed calls in seconds, chases confirmations, wins back no-shows and brings lapsed patients home — running alongside whatever software your clinic already uses. Set up and run for you, month to month.">
 <meta property="og:title" content="Polaris — the front desk that never misses">
-<meta property="og:description" content="Missed calls answered in seconds, reminders that run themselves, lapsed patients nudged home — on top of the software your clinic already uses.">
+<meta property="og:description" content="Missed calls caught in seconds, reminders that run themselves, lapsed patients nudged home — alongside the software your clinic already uses.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://stellarhausmedia.com/polaris.html">
+<meta property="og:url" content="https://stellarhausmedia.com/polaris">
 <meta property="og:image" content="https://stellarhausmedia.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://stellarhausmedia.com/og-image.png">
-<link rel="canonical" href="https://stellarhausmedia.com/polaris.html">
+<link rel="canonical" href="https://stellarhausmedia.com/polaris">
 <!-- HREFLANG -->
-<link rel="alternate" hreflang="en" href="https://stellarhausmedia.com/polaris.html">
-<link rel="alternate" hreflang="x-default" href="https://stellarhausmedia.com/polaris.html">
+<link rel="alternate" hreflang="en" href="https://stellarhausmedia.com/polaris">
+<link rel="alternate" hreflang="x-default" href="https://stellarhausmedia.com/polaris">
 <!-- /HREFLANG -->
-<meta name="theme-color" content="#0D1015">
+<meta name="theme-color" content="#000000">
 <link rel="icon" href="polaris/favicon.svg" type="image/svg+xml">
-<link rel="preload" as="image" href="polaris/p-builder.webp">
+<link rel="preload" as="image" href="polaris/p-video-poster.webp">
 <style>
 /* ============================================================================
    POLARIS — standalone product page. Its own identity (Graphite Signal:
-   instrument graphite + one warm amber, the compass-needle mark). The through-
-   line is navigation — Polaris is the fixed star a clinic steers a patient by.
-   Self-contained: no site chrome, no shared CSS/JS, no external requests.
+   true black + instrument graphite + one warm amber, the compass-needle mark).
+   Deliberately NOT the Stellar Haus navy world. Self-contained: no site
+   chrome, no shared CSS/JS, no external requests.
    ========================================================================== */
 @font-face{font-family:"Bricolage";src:url("fonts/bricolage-grotesque.woff2") format("woff2");font-weight:200 800;font-display:swap}
 @font-face{font-family:"Hanken";src:url("fonts/hanken-grotesk.woff2") format("woff2");font-weight:100 900;font-display:swap}
 @font-face{font-family:"JBMono";src:url("fonts/jetbrains-mono.woff2") format("woff2");font-weight:100 800;font-display:swap}
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --ink:#0D1015; --graphite:#23272F; --graphite-2:#14171D; --graphite-3:#1B1F27;
+  --blk:#000000; --graphite:#23272F; --graphite-2:#14171D; --graphite-3:#1B1F27;
   --amber:#ED9B40; --amber-lo:#F0A857; --amber-deep:#8A4E10;
+  --mint:#5FE3C6;
   --paper:#F6F4F0; --paper-2:#FFFFFF;
   --tx-d:#EDEFF3; --mut-d:#98A0AC; --line-d:rgba(237,239,243,.12);
   --tx-l:#191C21; --mut-l:#5A626D; --line-l:#E4E1DB;
   --fd:"Bricolage",system-ui,sans-serif; --fb:"Hanken",system-ui,Arial,sans-serif; --fm:"JBMono",ui-monospace,monospace;
   --ease:cubic-bezier(.16,1,.3,1);
 }
-html{background:var(--ink);scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+html{background:var(--blk);scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-body{background:var(--ink);color:var(--tx-d);font-family:var(--fb);font-size:clamp(15.5px,1.05vw,17px);line-height:1.62;overflow-x:clip}
+body{background:var(--blk);color:var(--tx-d);font-family:var(--fb);font-size:clamp(15.5px,1.05vw,17px);line-height:1.62;overflow-x:clip}
 a{color:inherit}
 img,video{max-width:100%}
 .wrap{max-width:1120px;margin:0 auto;padding:0 clamp(20px,5vw,52px)}
-.narrow{max-width:760px}
 h2{font-family:var(--fd);font-weight:800;letter-spacing:-.028em;line-height:1.04;font-size:clamp(2rem,4.8vw,3.2rem);text-wrap:balance}
 h2 .amber{color:var(--amber)}
 .lead{font-size:clamp(1.08rem,1.8vw,1.32rem);line-height:1.55;color:var(--mut-d);max-width:60ch;text-wrap:pretty}
@@ -57,7 +57,7 @@ h2 .amber{color:var(--amber)}
 .btn .arw{transition:transform .35s var(--ease)}
 .btn:hover .arw{transform:translateX(4px)}
 .btn.ink{background:var(--graphite-2);color:var(--paper);box-shadow:0 12px 34px -16px rgba(0,0,0,.7)}
-.btn.ink:hover{background:#0A0C10;box-shadow:0 18px 44px -14px rgba(0,0,0,.85)}
+.btn.ink:hover{background:#000;box-shadow:0 18px 44px -14px rgba(0,0,0,.85)}
 :focus-visible{outline:2.5px solid var(--amber);outline-offset:3px;border-radius:8px}
 
 /* reveal — visible by default; motion is an enhancement layered only when allowed */
@@ -66,7 +66,7 @@ html.anim .rv{opacity:0;transform:translateY(20px);transition:opacity .7s var(--
 html.anim .rv.in{opacity:1;transform:none}
 
 /* ── header ─────────────────────────────────────────────── */
-.top{position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--ink) 86%,transparent);
+.top{position:sticky;top:0;z-index:60;background:rgba(0,0,0,.82);
   backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line-d)}
 .top .wrap{display:flex;align-items:center;gap:14px;height:66px}
 .mark{display:inline-flex;align-items:center;gap:11px;text-decoration:none}
@@ -74,20 +74,19 @@ html.anim .rv.in{opacity:1;transform:none}
 .mark .wm{display:flex;flex-direction:column;line-height:1}
 .mark b{font-family:var(--fm);font-weight:600;font-size:14px;letter-spacing:.34em}
 .mark small{font-size:10px;color:var(--mut-d);letter-spacing:.03em;margin-top:4px}
+.mark small .shm{color:var(--mint);font-weight:600}
 .top .btn{margin-left:auto;padding:10px 20px;font-size:14px;min-height:40px}
 @media (max-width:560px){.mark small{display:none}.top .btn{padding:9px 16px}}
 
 /* ── hero ───────────────────────────────────────────────── */
 .hero{position:relative;overflow:hidden;padding:clamp(58px,10vw,116px) 0 clamp(40px,6vw,72px)}
 .hero .aur{position:absolute;inset:-30% -10% auto -10%;height:720px;pointer-events:none;
-  background:radial-gradient(60% 60% at 50% 0%,rgba(237,155,64,.16),transparent 70%)}
-.hero .field{position:absolute;inset:0;pointer-events:none;opacity:.5;
-  background-image:radial-gradient(circle at 1px 1px,rgba(237,239,243,.09) 1px,transparent 0);
-  background-size:38px 38px;mask-image:radial-gradient(120% 80% at 50% 0%,#000 30%,transparent 78%)}
+  background:radial-gradient(60% 60% at 50% 0%,rgba(237,155,64,.14),transparent 70%)}
+canvas.field{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:block}
 .hero .wrap{position:relative}
 .h-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:11px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--amber);border:1px solid rgba(237,155,64,.35);border-radius:999px;
-  padding:6px 13px 6px 10px;background:rgba(237,155,64,.06)}
+  padding:6px 13px 6px 10px;background:rgba(237,155,64,.08)}
 .h-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber)}
 h1{font-family:var(--fd);font-weight:800;letter-spacing:-.035em;line-height:1;margin:24px 0 0;
   font-size:clamp(2.7rem,7.6vw,5.4rem);max-width:14ch;text-wrap:balance}
@@ -96,15 +95,20 @@ h1 em{font-style:normal;color:var(--amber)}
 .cta-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .cta-row .aside{font-family:var(--fm);font-size:11px;letter-spacing:.09em;color:var(--mut-d);text-transform:uppercase}
 
-/* ── video ──────────────────────────────────────────────── */
+/* ── video: player + side column ────────────────────────── */
 .stage{padding:clamp(18px,3.5vw,40px) 0 clamp(56px,9vw,100px)}
+.duo{display:grid;gap:clamp(22px,3.5vw,44px);align-items:center}
+@media (min-width:900px){.duo{grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr)}}
 .player{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line-d);
-  background:var(--graphite-2);box-shadow:0 50px 110px -50px rgba(0,0,0,.9),0 0 0 1px rgba(237,155,64,.06);isolation:isolate}
+  background:var(--graphite-2);box-shadow:0 50px 110px -50px rgba(0,0,0,.9),0 0 0 1px rgba(237,155,64,.06)}
 .player video{display:block;width:100%;height:auto}
-.player figcaption{position:absolute;left:14px;bottom:14px;z-index:2;display:flex;align-items:center;gap:8px;
-  font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-d);
-  background:rgba(13,16,21,.7);backdrop-filter:blur(6px);border:1px solid var(--line-d);border-radius:8px;padding:6px 11px;pointer-events:none}
-.player figcaption i{font-style:normal;color:var(--amber)}
+.vtext h2{font-size:clamp(1.7rem,3.4vw,2.5rem);max-width:14ch}
+.vtext .vlead{font-size:clamp(1.05rem,1.6vw,1.22rem);line-height:1.6;color:var(--mut-d);margin-top:16px;text-wrap:pretty}
+.vtext .vlead b{color:var(--tx-d)}
+.vtext .vnote{display:block;margin-top:22px;padding-top:16px;border-top:1px solid var(--line-d);
+  font-family:var(--fm);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut-d);line-height:1.9}
+.vtext .vnote i{font-style:normal;color:var(--amber)}
+@media (max-width:899px){.vtext{order:-1}.vtext .vnote{margin-top:16px}}
 
 /* ── the route (patient journey) ────────────────────────── */
 .route-sec{background:var(--paper);color:var(--tx-l);padding:clamp(64px,9vw,120px) 0}
@@ -154,12 +158,12 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
 .shot{position:relative}
 .shot img{display:block;width:100%;height:auto;border-radius:14px;border:1px solid var(--line-l);
   box-shadow:0 36px 80px -44px rgba(20,25,29,.5)}
-.shot .cap{font-family:var(--fm);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut-l);
+.shot figcaption{font-family:var(--fm);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut-l);
   margin-top:12px;padding-left:2px}
 .shot.wide{grid-column:1/-1}
 @media (min-width:800px){.shot-grid{grid-template-columns:1fr 1fr}}
 
-/* ── honesty (dark) ─────────────────────────────────────── */
+/* ── honesty (graphite) ─────────────────────────────────── */
 .honest{background:var(--graphite-2);padding:clamp(64px,9vw,116px) 0}
 .honest h2{max-width:16ch}
 .honest .grid{display:grid;gap:clamp(20px,3vw,34px);margin-top:clamp(32px,4vw,52px)}
@@ -182,7 +186,7 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='12' fill='%2314171D'/><path d='M17 8.5 L10.5 15.5 L7 12' fill='none' stroke='%23ED9B40' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat}
 .offer .terms b{color:#14171D;font-weight:700}
 .offer .cta-row{margin-top:32px}
-.offer .aside{color:#7A5417}
+.offer .aside{color:#5A3B0E}
 
 /* ── footer ─────────────────────────────────────────────── */
 .foot{padding:46px 0 38px;border-top:1px solid var(--line-d)}
@@ -201,36 +205,40 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
   <div class="wrap">
     <a class="mark" href="#top" aria-label="Polaris — top of page">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ED9B40" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
-      <span class="wm"><b>POLARIS</b><small>by Stellar Haus Media</small></span>
+      <span class="wm"><b>POLARIS</b><small>by <span class="shm">Stellar Haus Media</span></small></span>
     </a>
-    <a class="btn" href="contact.html">Enquire now</a>
+    <a class="btn" href="polaris-contact.html">Enquire now</a>
   </div>
 </header>
 
 <main id="top">
   <section class="hero">
     <div class="aur" aria-hidden="true"></div>
-    <div class="field" aria-hidden="true"></div>
+    <canvas class="field" id="dots" aria-hidden="true"></canvas>
     <div class="wrap">
-      <span class="h-badge rv"><span class="dot"></span>Works with the software your clinic already runs</span>
+      <span class="h-badge rv"><span class="dot"></span>Runs alongside the software your clinic already uses</span>
       <h1 class="rv">The front desk that <em>never misses</em>.</h1>
-      <p class="lead rv">Polaris answers the calls your desk can't get to, chases the confirmations that stop no-shows, and quietly brings lapsed patients home — sitting on top of whatever software your clinic already runs. We set it up and run it for you. You just watch the chairs fill.</p>
+      <p class="lead rv">Polaris catches the calls your desk can't get to, chases the confirmations that stop no-shows, and quietly brings lapsed patients home — no rip-and-replace, it runs alongside whatever your clinic already uses. We set it up and run it for you. You just watch the chairs fill.</p>
       <div class="cta-row rv">
-        <a class="btn" href="contact.html">Enquire now <span class="arw">→</span></a>
-        <span class="aside">15 minutes · on your clinic's name</span>
+        <a class="btn" href="polaris-contact.html">Enquire now <span class="arw">→</span></a>
+        <span class="aside">15-minute call · no obligation</span>
       </div>
     </div>
   </section>
 
   <section class="stage">
-    <div class="wrap">
+    <div class="wrap duo">
       <figure class="player rv">
         <video controls playsinline preload="metadata" poster="polaris/p-video-poster.webp" width="1280" height="720">
           <source src="polaris/polaris-demo-inr.webm" type="video/webm">
           Your browser can't play this clip — enquire below and we'll show you live.
         </video>
-        <figcaption><i>▶</i> A missed call, caught — scripted simulation · sample data</figcaption>
       </figure>
+      <div class="vtext rv">
+        <h2>A missed call, <span class="amber">caught</span>.</h2>
+        <p class="vlead">Thirty seconds, start to finish. The phone rings out while the desk is busy — <b>Polaris replies before the caller moves on</b>, holds the conversation, pencils the slot in for your desk to confirm, and every Polaris screen updates itself — while your team stays with the patient in the chair.</p>
+        <span class="vnote"><i>▶</i> 30 seconds · scripted simulation<br>sample patients · no real calls or texts</span>
+      </div>
     </div>
   </section>
 
@@ -244,7 +252,7 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
       <div class="route">
         <div class="stop l rv">
           <div class="node"><span>1</span></div>
-          <div class="body"><span class="when">The call rings out</span><h3>It answers before they hang up.</h3><p>Your desk is with a patient. Polaris texts the caller back within seconds — with a link to book. The one who'd have dialled the next clinic stays yours.</p></div>
+          <div class="body"><span class="when">The call rings out</span><h3>It texts back before they move on.</h3><p>Your desk is with a patient. Polaris texts the caller back within seconds — with a link to book. The one who'd have dialled the next clinic stays yours.</p></div>
         </div>
         <div class="leg lr" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M170 6 C 170 90, 630 34, 630 116"></path><path class="m" d="M60 2 C 24 44, 60 82, 60 118"></path></svg><span class="tip"><svg viewBox="0 0 15 13"><path d="M7.5 13 L0 0 L15 0 Z"/></svg></span></div>
 
@@ -256,7 +264,7 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
 
         <div class="stop l rv">
           <div class="node"><span>3</span></div>
-          <div class="body"><span class="when">Someone slips through</span><h3>It wins the no-show back.</h3><p>Anyone who misses gets a same-day "life happens — want a new time?" message, then a gentle follow-up. Most rebook themselves, that day.</p></div>
+          <div class="body"><span class="when">Someone slips through</span><h3>It wins the no-show back.</h3><p>Anyone who misses gets a same-day "life happens — want a new time?" message, then a gentle follow-up — with a one-tap link to pick a new slot, the same day.</p></div>
         </div>
         <div class="leg lr" aria-hidden="true"><svg viewBox="0 0 800 120" preserveAspectRatio="none"><path class="d" d="M170 6 C 170 90, 630 34, 630 116"></path><path class="m" d="M60 2 C 24 44, 60 82, 60 118"></path></svg><span class="tip"><svg viewBox="0 0 15 13"><path d="M7.5 13 L0 0 L15 0 Z"/></svg></span></div>
 
@@ -286,7 +294,7 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
         <p>One calm screen for your team: every conversation, every booking, every automation — visible and auditable. These are sample patients; we'll walk you through the real thing, live.</p>
       </div>
       <div class="shot-grid">
-        <figure class="shot wide rv"><img src="polaris/p-builder.webp" alt="Inside the missed-call workflow: a call with no answer triggers an instant reply, waits for the patient, then books the slot or alerts the front desk" width="1600" height="941" fetchpriority="high"><figcaption>Inside one automation — every step visible, every run logged</figcaption></figure>
+        <figure class="shot wide rv"><img src="polaris/p-builder.webp" alt="Inside the missed-call workflow: a call with no answer triggers an instant reply, waits for the patient, then books the slot or alerts the front desk" width="1600" height="941" loading="lazy"><figcaption>Inside one automation — every step visible, every run logged</figcaption></figure>
         <figure class="shot rv"><img src="polaris/p-automations.webp" alt="The Polaris automations list showing reminder, recall and review workflows, each with how many patients are currently enrolled" width="1600" height="941" loading="lazy"><figcaption>The six automations that run the desk</figcaption></figure>
         <figure class="shot rv"><img src="polaris/p-calendar.webp" alt="The clinic's week at a glance, colour-coded per clinician with clear confirmed and no-show statuses on each appointment" width="1600" height="941" loading="lazy"><figcaption>The week, always current</figcaption></figure>
       </div>
@@ -308,14 +316,14 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
     <svg class="stamp" viewBox="0 0 48 48" aria-hidden="true"><path fill="#14171D" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
     <div class="wrap">
       <h2 class="rv">We build it. We run it. You fill chairs.</h2>
-      <p class="sub rv">The whole system — missed-call recovery, reminders, recall, reviews — set up on top of the software you already use, and managed for you end to end. Nothing for your team to learn, nothing to babysit. You watch the bookings land.</p>
+      <p class="sub rv">The whole system — missed-call recovery, reminders, recall, reviews — set up alongside the software you already use, and managed for you end to end. Nothing for your team to learn, nothing to babysit. You watch the bookings land.</p>
       <ul class="terms rv">
         <li><b>Your first month is free.</b></li>
         <li>One simple monthly fee — no setup cost.</li>
         <li>Month to month. Cancel anytime.</li>
       </ul>
       <div class="cta-row rv">
-        <a class="btn ink" href="contact.html">Enquire now <span class="arw">→</span></a>
+        <a class="btn ink" href="polaris-contact.html">Enquire now <span class="arw">→</span></a>
         <span class="aside">15 minutes · no obligation</span>
       </div>
     </div>
@@ -324,11 +332,11 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
 
 <footer class="foot">
   <div class="wrap">
-    <a class="mark" href="index.html" aria-label="Stellar Haus Media — home">
+    <a class="mark" href="#top" aria-label="Polaris — top of page">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ED9B40" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
       <span class="wm"><b>POLARIS</b></span>
     </a>
-    <p>Built and run by <a href="index.html">Stellar Haus Media</a> · <a href="contact.html">Enquire now</a></p>
+    <p>Built and run by <a href="index.html">Stellar Haus Media</a> · <a href="polaris-contact.html">Enquire now</a></p>
     <span class="fine">Demo content uses sample data · © 2026 Stellar Haus Media</span>
   </div>
 </footer>
@@ -337,7 +345,61 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
 (function () {
   "use strict";
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduce) return; /* connectors + content already fully visible; skip motion entirely */
+
+  /* ── hero dot field: a slow amber glow-wave rolls across the grid by itself.
+        Non-interactive; paused off-screen and on hidden tabs; reduced motion
+        gets a single static frame. ─────────────────────────────────────── */
+  (function () {
+    var cv = document.getElementById("dots");
+    if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var W = 0, H = 0, dots = [], SP = 36;
+    function build() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = cv.clientWidth; H = cv.clientHeight;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      dots = [];
+      for (var y = SP / 2; y < H; y += SP) {
+        for (var x = SP / 2; x < W; x += SP) {
+          var dx = (x - W / 2) / (W * 0.62), dy = (y - H * 0.05) / (H * 0.85);
+          var m = 1 - Math.sqrt(dx * dx + dy * dy); /* same radial falloff the old static grid had */
+          if (m > 0.03) dots.push({ x: x, y: y, m: m * m });
+        }
+      }
+    }
+    function paint(t) {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < dots.length; i++) {
+        var d = dots[i];
+        /* two slow plane waves at different angles keep the roll organic */
+        var s1 = Math.sin((d.x * 0.80 + d.y * 0.55) / 120 - t * 1.1);
+        var s2 = Math.sin((d.x * -0.35 + d.y * 0.90) / 150 - t * 0.7);
+        var w = (s1 > 0 ? s1 * s1 * s1 : 0) * 0.75 + (s2 > 0 ? s2 * s2 * s2 : 0) * 0.45;
+        var a = d.m * (0.10 + 0.55 * w);
+        if (a < 0.015) continue;
+        ctx.fillStyle = (w > 0.3 ? "rgba(237,155,64," : "rgba(237,239,243,") + a.toFixed(3) + ")";
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, 1.4 + w * 1.4, 0, 6.2832);
+        ctx.fill();
+      }
+    }
+    build();
+    if (reduce) { paint(1.2); addEventListener("resize", function () { build(); paint(1.2); }); return; }
+    var running = true, visible = true, t0 = performance.now();
+    function loop(now) {
+      if (running && visible) paint((now - t0) / 1000);
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+    document.addEventListener("visibilitychange", function () { running = !document.hidden; });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: 0 }).observe(cv);
+    }
+    var rt; addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(build, 150); });
+  })();
+
+  if (reduce) return; /* content is already fully visible; skip entrance motion */
   document.documentElement.classList.add("anim");
   /* prime every connector stroke (desktop + mobile variant) as an undrawn dashed line;
      the .d/.m classes scope this to the route curves only — never the arrowhead tip */
