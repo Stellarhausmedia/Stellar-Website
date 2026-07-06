@@ -74,7 +74,8 @@ html.anim .rv.in{opacity:1;transform:none}
 .mark .wm{display:flex;flex-direction:column;line-height:1}
 .mark b{font-family:var(--fm);font-weight:600;font-size:14px;letter-spacing:.34em}
 .mark small{font-size:10px;color:var(--mut-d);letter-spacing:.03em;margin-top:4px}
-.mark small .shm{color:var(--mint);font-weight:600}
+.mark small .shm{color:var(--mint);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(95,227,198,.4);transition:border-color .2s,color .2s}
+.mark small .shm:hover,.mark small .shm:focus-visible{color:#7CE8CF;border-color:#7CE8CF}
 .top .btn{margin-left:auto;padding:10px 20px;font-size:14px;min-height:40px}
 @media (max-width:560px){.mark small{display:none}.top .btn{padding:9px 16px}}
 
@@ -203,10 +204,10 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
 
 <header class="top">
   <div class="wrap">
-    <a class="mark" href="#top" aria-label="Polaris — top of page">
+    <div class="mark">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ED9B40" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
-      <span class="wm"><b>POLARIS</b><small>by <span class="shm">Stellar Haus Media</span></small></span>
-    </a>
+      <span class="wm"><b>POLARIS</b><small>by <a class="shm" href="index.html">Stellar Haus Media</a></small></span>
+    </div>
     <a class="btn" href="polaris-contact.html">Enquire now</a>
   </div>
 </header>
@@ -332,10 +333,10 @@ html.anim .leg.in .tip{opacity:1;transition:opacity .3s ease .85s}
 
 <footer class="foot">
   <div class="wrap">
-    <a class="mark" href="#top" aria-label="Polaris — top of page">
+    <div class="mark">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ED9B40" d="M24 4.5 L28 25 L35.5 28.5 L28 32 L24 43.5 L20 32 L12.5 28.5 L20 25 Z"/></svg>
       <span class="wm"><b>POLARIS</b></span>
-    </a>
+    </div>
     <p>Built and run by <a href="index.html">Stellar Haus Media</a> · <a href="polaris-contact.html">Enquire now</a></p>
     <span class="fine">Demo content uses sample data · © 2026 Stellar Haus Media</span>
   </div>
